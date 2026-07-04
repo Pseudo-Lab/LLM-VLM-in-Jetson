@@ -1,2 +1,3 @@
 *.safetensors
 *.pyc
+*.jinja
