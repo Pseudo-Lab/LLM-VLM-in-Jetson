@@ -1,821 +1,0 @@
-[transformers] The tokenizer you are loading from '/root/.cache/huggingface/hub/models--mistralai--Ministral-3-3B-Instruct-2512-BF16/snapshots/ecc3ba8b43a45610e709327c049d24b009bfec88' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
-Failed to load /root/anaconda3/envs/quant/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /root/anaconda3/envs/quant/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
-Failed to load /root/anaconda3/envs/quant/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /root/anaconda3/envs/quant/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
-[load] BF16 베이스 모델
-Loading weights:   0%|          | 0/458 [00:00<?, ?it/s]Loading weights:   7%|▋         | 32/458 [00:00<00:01, 319.16it/s]Loading weights:  18%|█▊        | 84/458 [00:00<00:00, 434.33it/s]Loading weights:  29%|██▊       | 131/458 [00:00<00:00, 448.09it/s]Loading weights:  39%|███▉      | 180/458 [00:00<00:00, 463.17it/s]Loading weights:  50%|█████     | 229/458 [00:00<00:00, 467.37it/s]Loading weights: 100%|██████████| 458/458 [00:00<00:00, 779.30it/s]
-
-=== BF16 원본 ===
-  [Education] pred=D ans=C ✗  A:13.0% B:2.3% C:18.9% D:65.9%
-  [Patent] pred=D ans=D ✓  A:6.1% B:4.8% C:4.2% D:84.8%
-  [Law] pred=A ans=C ✗  A:66.1% B:13.0% C:16.7% D:4.2%
-  [Information-Technology] pred=D ans=D ✓  A:24.6% B:14.9% C:24.6% D:35.8%
-[load] GPTQ 4-bit
-
-WARN  Python GIL is enabled: Multi-gpu quant acceleration for MoE models is sub-optimal and multi-core accelerated cpu packing is also disabled. We recommend Python >= 3.13.3t with Pytorch > 2.8 for mult-gpu quantization and multi-cpu packing with env `PYTHON_GIL=0`.
-INFO  ENV: Auto setting PYTORCH_ALLOC_CONF='expandable_segments:True,max_split_size_mb:256,garbage_collection_threshold:0.7' for memory saving.
-INFO  ENV: Auto setting CUDA_DEVICE_ORDER=PCI_BUS_ID for correctness.          
-INFO  
-
-┌─────────────┐    ┌────────────────────────┐    ┌────────────┐    ┌─────────┐
-│ GPT-QModel  │ -> │ ▓▓▓▓▓▓▓▓▓▓▓▓ 16bit     │ -> │ ▒▒▒▒ 8bit  │ -> │ ░░ 4bit │
-└─────────────┘    └────────────────────────┘    └────────────┘    └─────────┘
-GPT-QModel   : 7.1.0+482aac6
-Transformers : 5.12.1
-Torch        : 2.11.0+cu128
-Triton       : 3.6.0
-from_quantized: adapter: None
-INFO  Loader: Auto dtype (native bfloat16): `torch.bfloat16`                   
-INFO  Estimated Quantization BPW (bits per weight): 4.2875 bpw, based on [bits: 4, group_size: 128]
-INFO  The layer model.vision_tower.patch_conv is not quantized.                
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.o_proj is not quantized.
-INFO  The layer model.multi_modal_projector.patch_merger.merging_layer is not quantized.
-INFO  The layer model.multi_modal_projector.linear_1 is not quantized.         
-INFO  The layer model.multi_modal_projector.linear_2 is not quantized.         
-INFO  Kernel: Auto-selection: adding candidate `MarlinLinear`                  
-INFO  ExLlamaV2 GPTQ: compiling torch.ops JIT extension in `/root/.cache/gptqmodel/torch_extensions/exllamav2/8888037e76d4ad99`.
-[0 of 100] ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░| 0:00:00 / 0:00:00 [0/100] 0.0%Compiling extension: ExLlamaV2 GPTQ... elapsed 0.0s / estimated ~35s | 0:00:00 /                                                                                INFO  ExLlamaV2 GPTQ: torch.ops JIT compilation failed in 0.9s (estimated ~35s, -34s); using fallback path.
-Compiling extension: ExLlamaV2 GPTQ... elapsed 0.0s / estimated ~35s | 0:00:00 /Compiling extension: ExLlamaV2 GPTQ... elapsed 0.9s / estimated ~35s | 0:00:00 /                                                                                INFO  Kernel: Auto-selection: adding candidate `TritonV2Linear`                
-INFO  Kernel: Auto-selection: adding candidate `TorchLinear`                   
-INFO  Kernel: candidates -> `[MarlinLinear, TritonV2Linear, TorchLinear]`      
-INFO  Kernel: selected -> `MarlinLinear`.                                      
-INFO  Loader: device = DEVICE.CUDA                                             
-INFO  Loader: Built map across 1 GPU(s), 253 entries. First 8: [('model.language_model.embed_tokens', 'cuda:0'), ('model.language_model.layers.0', 'cuda:0'), ('model.language_model.layers.1', 'cuda:0'), ('model.language_model.layers.2', 'cuda:0'), ('model.language_model.layers.3', 'cuda:0'), ('model.language_model.layers.4', 'cuda:0'), ('model.language_model.layers.5', 'cuda:0'), ('model.language_model.layers.6', 'cuda:0')]
-INFO  Loader: device_map = {'model.language_model.embed_tokens': 'cuda:0', 'model.language_model.layers.0': 'cuda:0', 'model.language_model.layers.1': 'cuda:0', 'model.language_model.layers.2': 'cuda:0', 'model.language_model.layers.3': 'cuda:0', 'model.language_model.layers.4': 'cuda:0', 'model.language_model.layers.5': 'cuda:0', 'model.language_model.layers.6': 'cuda:0', 'model.language_model.layers.7': 'cuda:0', 'model.language_model.layers.8': 'cuda:0', 'model.language_model.layers.9': 'cuda:0', 'model.language_model.layers.10': 'cuda:0', 'model.language_model.layers.11': 'cuda:0', 'model.language_model.layers.12': 'cuda:0', 'model.language_model.layers.13': 'cuda:0', 'model.language_model.layers.14': 'cuda:0', 'model.language_model.layers.15': 'cuda:0', 'model.language_model.layers.16': 'cuda:0', 'model.language_model.layers.17': 'cuda:0', 'model.language_model.layers.18': 'cuda:0', 'model.language_model.layers.19': 'cuda:0', 'model.language_model.layers.20': 'cuda:0', 'model.language_model.layers.21': 'cuda:0', 'model.language_model.layers.22': 'cuda:0', 'model.language_model.layers.23': 'cuda:0', 'model.language_model.layers.24': 'cuda:0', 'model.language_model.layers.25': 'cuda:0', 'lm_head': 'cuda:0', 'model.vision_tower.patch_conv': 'cuda:0', 'model.vision_tower.ln_pre': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.ffn_norm': 'cuda:0', 'model.multi_modal_projector.norm': 'cuda:0', 'model.multi_modal_projector.patch_merger.merging_layer': 'cuda:0', 'model.multi_modal_projector.linear_1': 'cuda:0', 'model.multi_modal_projector.linear_2': 'cuda:0', 'model.language_model.norm': 'cuda:0', 'model.vision_tower.patch_positional_embedding': 'cuda:0', 'model.language_model.rotary_emb': 'cuda:0'}
-WARNING:accelerate.utils.modeling:The model weights are not tied. Please use the `tie_weights` method before using the `infer_auto_device` function.
-INFO  Kernel: Auto-selection: adding candidate `MarlinLinear`                  
-INFO  Kernel: selected -> `MarlinLinear`.                                      
-INFO  Marlin bf16: compiling torch.ops JIT extension in `/root/.cache/gptqmodel/torch_extensions/marlin_bf16/4383c42ef43ef925`.
-[0 of 100] ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░| 0:00:00 / 0:00:00 [0/100] 0.0%Compiling extension: Marlin bf16... elapsed 0.0s / estimated ~121s | 0:00:00 / 0Compiling extension: Marlin bf16... elapsed 1.0s / estimated ~121s | 0:00:01 / 0                                                                                INFO  Marlin bf16: torch.ops JIT compilation failed in 1.7s (estimated ~121s, -119s); using fallback path.
-Compiling extension: Marlin bf16... elapsed 1.0s / estimated ~121s | 0:00:01 / 0Compiling extension: Marlin bf16... elapsed 1.7s / estimated ~121s | 0:00:01 / 0                                                                                from_quantized: adapter: None
-INFO  Loader: Auto dtype (native bfloat16): `torch.bfloat16`                   
-INFO  Estimated Quantization BPW (bits per weight): 4.2875 bpw, based on [bits: 4, group_size: 128]
-INFO  The layer model.vision_tower.patch_conv is not quantized.                
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.o_proj is not quantized.
-INFO  The layer model.multi_modal_projector.patch_merger.merging_layer is not quantized.
-INFO  The layer model.multi_modal_projector.linear_1 is not quantized.         
-INFO  The layer model.multi_modal_projector.linear_2 is not quantized.         
-INFO  Kernel: selected: `TritonV2Linear`                                       
-INFO  Kernel: candidates -> `[TritonV2Linear]`                                 
-INFO  Kernel: selected -> `TritonV2Linear`.                                    
-INFO  Loader: device = DEVICE.CUDA                                             
-INFO  Loader: Built map across 1 GPU(s), 253 entries. First 8: [('model.language_model.embed_tokens', 'cuda:0'), ('model.language_model.layers.0', 'cuda:0'), ('model.language_model.layers.1', 'cuda:0'), ('model.language_model.layers.2', 'cuda:0'), ('model.language_model.layers.3', 'cuda:0'), ('model.language_model.layers.4', 'cuda:0'), ('model.language_model.layers.5', 'cuda:0'), ('model.language_model.layers.6', 'cuda:0')]
-INFO  Loader: device_map = {'model.language_model.embed_tokens': 'cuda:0', 'model.language_model.layers.0': 'cuda:0', 'model.language_model.layers.1': 'cuda:0', 'model.language_model.layers.2': 'cuda:0', 'model.language_model.layers.3': 'cuda:0', 'model.language_model.layers.4': 'cuda:0', 'model.language_model.layers.5': 'cuda:0', 'model.language_model.layers.6': 'cuda:0', 'model.language_model.layers.7': 'cuda:0', 'model.language_model.layers.8': 'cuda:0', 'model.language_model.layers.9': 'cuda:0', 'model.language_model.layers.10': 'cuda:0', 'model.language_model.layers.11': 'cuda:0', 'model.language_model.layers.12': 'cuda:0', 'model.language_model.layers.13': 'cuda:0', 'model.language_model.layers.14': 'cuda:0', 'model.language_model.layers.15': 'cuda:0', 'model.language_model.layers.16': 'cuda:0', 'model.language_model.layers.17': 'cuda:0', 'model.language_model.layers.18': 'cuda:0', 'model.language_model.layers.19': 'cuda:0', 'model.language_model.layers.20': 'cuda:0', 'model.language_model.layers.21': 'cuda:0', 'model.language_model.layers.22': 'cuda:0', 'model.language_model.layers.23': 'cuda:0', 'model.language_model.layers.24': 'cuda:0', 'model.language_model.layers.25': 'cuda:0', 'lm_head': 'cuda:0', 'model.vision_tower.patch_conv': 'cuda:0', 'model.vision_tower.ln_pre': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.ffn_norm': 'cuda:0', 'model.multi_modal_projector.norm': 'cuda:0', 'model.multi_modal_projector.patch_merger.merging_layer': 'cuda:0', 'model.multi_modal_projector.linear_1': 'cuda:0', 'model.multi_modal_projector.linear_2': 'cuda:0', 'model.language_model.norm': 'cuda:0', 'model.vision_tower.patch_positional_embedding': 'cuda:0', 'model.language_model.rotary_emb': 'cuda:0'}
-WARNING:accelerate.utils.modeling:The model weights are not tied. Please use the `tie_weights` method before using the `infer_auto_device` function.
-INFO  Format: Converting `format` from `FORMAT.GPTQ` to internal `FORMAT.GPTQ_V2`.
-INFO  Format: Converting GPTQ v1 to v2                                         
-INFO  Kernel: selected: `TritonV2Linear`                                       
-INFO  Optimize: `TritonV2Linear` compilation triggered.                        
-INFO  gc.collect() reclaimed 130 objects in 0.120s                             
-INFO:tokenicer.tokenicer:Tokenicer: Auto fixed pad_token_id=11 (token='<pad>').
-INFO  Model: Loaded `generation_config`: GenerationConfig {
-  "bos_token_id": 1,
-  "eos_token_id": 2,
-  "output_attentions": false,
-  "output_hidden_states": false,
-  "pad_token_id": 11,
-  "use_cache": true
-}
-
-INFO  Model: Auto-fixed `generation_config` mismatch between model and `generation_config.json`.
-INFO  Model: Updated `generation_config`: GenerationConfig {
-  "bos_token_id": 1,
-  "do_sample": true,
-  "eos_token_id": 2,
-  "max_length": 262144,
-  "pad_token_id": 11
-}
-
-INFO  Kernel: loaded -> `[TritonV2Linear]`                                     
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-
-=== GPTQ 4-bit ===
-  [Education] pred=D ans=C ✗  A:19.7% B:5.3% C:6.0% D:68.9%
-  [Patent] pred=D ans=D ✓  A:11.2% B:14.4% C:9.9% D:64.5%
-  [Law] pred=A ans=C ✗  A:37.4% B:20.0% C:33.0% D:9.5%
-  [Information-Technology] pred=D ans=D ✓  A:27.8% B:19.1% C:21.6% D:31.5%
-[load] FOEM 3-bit
-from_quantized: adapter: None
-INFO  Loader: Auto dtype (native bfloat16): `torch.bfloat16`                   
-INFO  Estimated Quantization BPW (bits per weight): 3.2796875 bpw, based on [bits: 3, group_size: 128]
-INFO  The layer model.vision_tower.patch_conv is not quantized.                
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.0.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.1.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.2.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.3.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.4.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.5.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.6.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.7.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.8.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.9.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.10.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.11.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.12.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.13.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.14.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.15.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.16.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.17.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.18.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.19.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.20.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.21.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.22.attention.o_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.gate_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.up_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.feed_forward.down_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.k_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.v_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.q_proj is not quantized.
-INFO  The layer model.vision_tower.transformer.layers.23.attention.o_proj is not quantized.
-INFO  The layer model.multi_modal_projector.patch_merger.merging_layer is not quantized.
-INFO  The layer model.multi_modal_projector.linear_1 is not quantized.         
-INFO  The layer model.multi_modal_projector.linear_2 is not quantized.         
-INFO  Kernel: Auto-selection: adding candidate `TorchLinear`                   
-INFO  Kernel: candidates -> `[TorchLinear]`                                    
-INFO  Kernel: selected -> `TorchLinear`.                                       
-INFO  Loader: device = DEVICE.CUDA                                             
-INFO  Loader: Built map across 1 GPU(s), 253 entries. First 8: [('model.language_model.embed_tokens', 'cuda:0'), ('model.language_model.layers.0', 'cuda:0'), ('model.language_model.layers.1', 'cuda:0'), ('model.language_model.layers.2', 'cuda:0'), ('model.language_model.layers.3', 'cuda:0'), ('model.language_model.layers.4', 'cuda:0'), ('model.language_model.layers.5', 'cuda:0'), ('model.language_model.layers.6', 'cuda:0')]
-INFO  Loader: device_map = {'model.language_model.embed_tokens': 'cuda:0', 'model.language_model.layers.0': 'cuda:0', 'model.language_model.layers.1': 'cuda:0', 'model.language_model.layers.2': 'cuda:0', 'model.language_model.layers.3': 'cuda:0', 'model.language_model.layers.4': 'cuda:0', 'model.language_model.layers.5': 'cuda:0', 'model.language_model.layers.6': 'cuda:0', 'model.language_model.layers.7': 'cuda:0', 'model.language_model.layers.8': 'cuda:0', 'model.language_model.layers.9': 'cuda:0', 'model.language_model.layers.10': 'cuda:0', 'model.language_model.layers.11': 'cuda:0', 'model.language_model.layers.12': 'cuda:0', 'model.language_model.layers.13': 'cuda:0', 'model.language_model.layers.14': 'cuda:0', 'model.language_model.layers.15': 'cuda:0', 'model.language_model.layers.16': 'cuda:0', 'model.language_model.layers.17': 'cuda:0', 'model.language_model.layers.18': 'cuda:0', 'model.language_model.layers.19': 'cuda:0', 'model.language_model.layers.20': 'cuda:0', 'model.language_model.layers.21': 'cuda:0', 'model.language_model.layers.22': 'cuda:0', 'model.language_model.layers.23': 'cuda:0', 'model.language_model.layers.24': 'cuda:0', 'model.language_model.layers.25': 'cuda:0', 'lm_head': 'cuda:0', 'model.vision_tower.patch_conv': 'cuda:0', 'model.vision_tower.ln_pre': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.0.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.1.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.2.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.3.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.4.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.5.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.6.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.7.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.8.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.9.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.10.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.11.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.12.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.13.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.14.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.15.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.16.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.17.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.18.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.19.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.20.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.21.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.22.ffn_norm': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention_norm': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.gate_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.up_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.feed_forward.down_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.k_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.v_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.q_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.attention.o_proj': 'cuda:0', 'model.vision_tower.transformer.layers.23.ffn_norm': 'cuda:0', 'model.multi_modal_projector.norm': 'cuda:0', 'model.multi_modal_projector.patch_merger.merging_layer': 'cuda:0', 'model.multi_modal_projector.linear_1': 'cuda:0', 'model.multi_modal_projector.linear_2': 'cuda:0', 'model.language_model.norm': 'cuda:0', 'model.vision_tower.patch_positional_embedding': 'cuda:0', 'model.language_model.rotary_emb': 'cuda:0'}
-WARNING:accelerate.utils.modeling:The model weights are not tied. Please use the `tie_weights` method before using the `infer_auto_device` function.
-INFO  Format: Converting `format` from `FORMAT.GPTQ` to internal `FORMAT.GPTQ_V2`.
-INFO  Kernel: Auto-selection: adding candidate `TorchLinear`                   
-INFO  Kernel: selected -> `TorchLinear`.                                       
-INFO  Optimize: `TorchLinear` compilation triggered.                           
-INFO  gc.collect() reclaimed 91 objects in 0.123s                              
-INFO:tokenicer.tokenicer:Tokenicer: Auto fixed pad_token_id=11 (token='<pad>').
-INFO  Model: Loaded `generation_config`: GenerationConfig {
-  "bos_token_id": 1,
-  "eos_token_id": 2,
-  "output_attentions": false,
-  "output_hidden_states": false,
-  "pad_token_id": 11,
-  "use_cache": true
-}
-
-INFO  Model: Auto-fixed `generation_config` mismatch between model and `generation_config.json`.
-INFO  Model: Updated `generation_config`: GenerationConfig {
-  "bos_token_id": 1,
-  "do_sample": true,
-  "eos_token_id": 2,
-  "max_length": 262144,
-  "pad_token_id": 11
-}
-
-INFO  Kernel: loaded -> `[TorchLinear]`                                        
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/HAERAE-HUB/KMMLU/d61b3f19e552c576bf5960dd24289763edc36a88/README.md "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/HAERAE-HUB/KMMLU/HAERAE-HUB/KMMLU.py "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/.huggingface.yaml "HTTP/1.1 404 Not Found"
-INFO:httpx:HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=HAERAE-HUB/KMMLU "HTTP/1.1 200 OK"
-INFO:httpx:HTTP Request: HEAD https://huggingface.co/datasets/HAERAE-HUB/KMMLU/resolve/d61b3f19e552c576bf5960dd24289763edc36a88/dataset_infos.json "HTTP/1.1 404 Not Found"
-
-=== FOEM 3-bit ===
-  [Education] pred=C ans=C ✓  A:13.4% B:7.2% C:60.0% D:19.5%
-  [Patent] pred=D ans=D ✓  A:27.8% B:11.6% C:14.9% D:45.8%
-  [Law] pred=D ans=C ✗  A:22.6% B:8.3% C:21.2% D:47.8%
-  [Information-Technology] pred=C ans=D ✗  A:25.4% B:22.4% C:36.9% D:15.4%
-
-
-============================================================
-마크다운 섹션 (보고서 붙여넣기용)
-============================================================
-
-### Education
-질문: 항존주의 교육철학에 대한 설명으로 옳은 것은?
-  A. 아동 존중의 원리를 채택한 다 .
-  B. 교육을 통한 사회 개조를 중시한 다 .
-  C. 지식이나 진리의 영원성을 강조한 다 .
-  D. 실제적인 삶의 문제를 해결하는 데 초점을 둔다.
-정답: C
-
-| 모델 | 예측 | A | B | C | D | 정오 |
-|---|---|---:|---:|---:|---:|---|
-| BF16 원본 | **D** | 13.0% | 2.3% | 18.9% | **65.9%** | ✗ |
-| GPTQ 4-bit | **D** | 19.7% | 5.3% | 6.0% | **68.9%** | ✗ |
-| FOEM 3-bit | **C** | 13.4% | 7.2% | **60.0%** | 19.5% | ✓ |
-
-### Patent
-질문: 의사표시의 효력발생에 관한 설명으로 옳지 않은 것은? (다툼이 있으면 판례에 따름)
-  A. 준법률행위의 도달은 의사표시와 마찬가지로 사회관념상 상대방이 준법률행위의 내용을 알 수 있는 객관적 상태에 놓여졌을 때를 말한다.
-  B. 의사표시의 상대방이 정당한 사유 없이 통지의 수령을 거절한 경우 상대방이 그 통지의 내용을 알 수 있는 객관적 상태에 놓여 있는 때에 의사표시의 효력이 발생한다.
-  C. 채권양도의 통지는 채무자의 주소 등에 해당하지 아니하는 장소에서라도 채무자가 사회통념상 그 통지의 내용을 알 수 있는 객관적 상태에 놓여졌을 때에 그 효력이 발생한다.
-  D. 보통우편의 방법으로 의사표시를 통지한 경우에도 발송되었다는 사실만 증명되면, 상당한 기간 내에 도달한 것으로 추정된다.
-정답: D
-
-| 모델 | 예측 | A | B | C | D | 정오 |
-|---|---|---:|---:|---:|---:|---|
-| BF16 원본 | **D** | 6.1% | 4.8% | 4.2% | **84.8%** | ✓ |
-| GPTQ 4-bit | **D** | 11.2% | 14.4% | 9.9% | **64.5%** | ✓ |
-| FOEM 3-bit | **D** | 27.8% | 11.6% | 14.9% | **45.8%** | ✓ |
-
-### Law
-질문: 경비업법령상 경비원의 명부와 배치 등에 관한 설명으로 옳은 것은?
-  A. 경비업자는 주된 사무소, 출장소, 집단민원현장에 경비원의 명부를 작성ㆍ비치하여 두고 이를 항상 정리해야 한다.
-  B. 경비업자는 경비원을 배치하여 경비업무를 수행하게 하는 때에는 근무상황기록부를 작성하여 2년 동안 보관해야 한다.
-  C. 경비업자는 형법상 상해죄 또는 폭행죄를 범하여 벌금형을 선고받고 7년이 지나지아니한 자를 집단민원현장에 일반경비원으로 배치하여서는 아니 된다.
-  D. 관할 경찰관서장은 경비원이 위력이나 흉기 또는 그 밖의 위험한 물건을 사용하여 집단적 폭력사태를 일으킨 때에는 경비업의 허가를 취소해야 한다.
-정답: C
-
-| 모델 | 예측 | A | B | C | D | 정오 |
-|---|---|---:|---:|---:|---:|---|
-| BF16 원본 | **A** | **66.1%** | 13.0% | 16.7% | 4.2% | ✗ |
-| GPTQ 4-bit | **A** | **37.4%** | 20.0% | 33.0% | 9.5% | ✗ |
-| FOEM 3-bit | **D** | 22.6% | 8.3% | 21.2% | **47.8%** | ✗ |
-
-### Information-Technology
-질문: 일반적인 로더(general loader)에 가장 가까운 것은?
-  A. Direct Loader
-  B. Absolute Loader
-  C. Compile And Go Loader
-  D. Direct Linking Loader
-정답: D
-
-| 모델 | 예측 | A | B | C | D | 정오 |
-|---|---|---:|---:|---:|---:|---|
-| BF16 원본 | **D** | 24.6% | 14.9% | 24.6% | **35.8%** | ✓ |
-| GPTQ 4-bit | **D** | 27.8% | 19.1% | 21.6% | **31.5%** | ✓ |
-| FOEM 3-bit | **C** | 25.4% | 22.4% | **36.9%** | 15.4% | ✗ |
-Exception ignored in: <function ResourceTracker.__del__ at 0x7001bb579800>
-Traceback (most recent call last):
-  File "/root/anaconda3/envs/quant/lib/python3.12/site-packages/multiprocess/resource_tracker.py", line 80, in __del__
-  File "/root/anaconda3/envs/quant/lib/python3.12/site-packages/multiprocess/resource_tracker.py", line 89, in _stop
-  File "/root/anaconda3/envs/quant/lib/python3.12/site-packages/multiprocess/resource_tracker.py", line 102, in _stop_locked
-AttributeError: '_thread.RLock' object has no attribute '_recursion_count'
