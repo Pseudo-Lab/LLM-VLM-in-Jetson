@@ -1,0 +1,6 @@
+*.safetensors
+*.pyc
+*.log
+*.jinja
+tokenizer.json
+tekken.json
