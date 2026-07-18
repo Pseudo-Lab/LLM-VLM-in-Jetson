@@ -242,9 +242,13 @@ def awq_quantize_linear(
     from .pack import pack_int4_weight
 
     w = _materialize_weight(linear).cpu()
+    orig_dtype = w.dtype
+    # fp16으로 계산하면 w * act_scales^alpha가 overflow(inf)할 수 있음
+    # (예: Qwen3 down_proj의 activation outlier) → 계산은 fp32, 저장만 원래 dtype
+    w = w.float()
 
     best_scale = search_best_scale(
-        w, act_scales.cpu(), w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+        w, act_scales.cpu().float(), w_bit=w_bit, group_size=group_size, zero_point=zero_point,
     )
 
     # AWQ: scale → quantize → unscale로 최적 FP16 weight 생성
@@ -257,25 +261,33 @@ def awq_quantize_linear(
     del w, w_scaled, w_dequant_scaled
 
     # w_final을 INT4로 양자화하여 export용 패킹
-    w_dequant_final, scale, zero = pseudo_quantize_tensor(
+    _, scale, zero = pseudo_quantize_tensor(
         w_final, w_bit=w_bit, group_size=group_size, zero_point=zero_point,
         clip_search=clip_search,
     )
+
+    # scale은 원래 dtype(fp16)으로 저장되므로, w_int와 w_dequant도
+    # 저장될 scale 기준으로 계산해야 INT4 파일과 모델 weight가 정확히 일치
+    scale = scale.to(orig_dtype)
+    scale_f = scale.float()
 
     out_features, in_features = w_final.shape
     n_groups = in_features // group_size
     w_reshaped = w_final.reshape(out_features, n_groups, group_size)
     del w_final
-    scale_expanded = scale.unsqueeze(-1)
+    scale_expanded = scale_f.unsqueeze(-1).clamp(min=1e-8)
 
     if zero_point and zero is not None:
         zero_expanded = zero.unsqueeze(-1)
         w_int = (w_reshaped / scale_expanded + zero_expanded).round().clamp(0, (1 << w_bit) - 1)
+        w_dequant_final = ((w_int - zero_expanded) * scale_expanded)
     else:
         q_max = (1 << (w_bit - 1)) - 1
         w_int = (w_reshaped / scale_expanded).round().clamp(-q_max, q_max)
+        w_dequant_final = (w_int * scale_expanded)
     del w_reshaped, scale_expanded
 
+    w_dequant_final = w_dequant_final.reshape(out_features, in_features).to(orig_dtype)
     w_int = w_int.reshape(out_features, in_features).to(torch.int32)
     w_int_T = w_int.T.contiguous()
     del w_int
