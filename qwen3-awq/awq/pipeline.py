@@ -51,6 +51,7 @@ class AWQQuantizer:
         w_bit: int = 4,
         group_size: int = 128,
         zero_point: bool = True,
+        clip_search: bool = False,
         skip_layers: set[str] | None = None,
         device_map: str = "auto",
         trust_remote_code: bool = True,
@@ -59,6 +60,7 @@ class AWQQuantizer:
         self.w_bit = w_bit
         self.group_size = group_size
         self.zero_point = zero_point
+        self.clip_search = clip_search
         self.skip_layers = skip_layers or DEFAULT_SKIP_PATTERNS
         self.device_map = device_map
         self.trust_remote_code = trust_remote_code
@@ -74,6 +76,7 @@ class AWQQuantizer:
         w_bit: int = 4,
         group_size: int = 128,
         zero_point: bool = True,
+        clip_search: bool = False,
         skip_layers: set[str] | None = None,
     ) -> "AWQQuantizer":
         """이미 로드된 모델과 토크나이저로 AWQQuantizer를 생성합니다."""
@@ -82,6 +85,7 @@ class AWQQuantizer:
         instance.w_bit = w_bit
         instance.group_size = group_size
         instance.zero_point = zero_point
+        instance.clip_search = clip_search
         instance.skip_layers = skip_layers or DEFAULT_SKIP_PATTERNS
         instance.device_map = "auto"
         instance.trust_remote_code = True
@@ -126,6 +130,7 @@ class AWQQuantizer:
                 "w_bit": self.w_bit,
                 "group_size": self.group_size,
                 "zero_point": self.zero_point,
+                "clip_search": self.clip_search,
                 "skip_layers": self.skip_layers,
             },
         }
@@ -159,7 +164,7 @@ class AWQQuantizer:
         print(f"  AWQ Quantization Pipeline")
         print(f"  모델: {self.model_name}")
         print(f"  Calibration: {calib_data} ({n_samples} samples, seq_len={seq_len})")
-        print(f"  양자화: INT{self.w_bit}, group_size={self.group_size}")
+        print(f"  양자화: INT{self.w_bit}, group_size={self.group_size}, clip_search={self.clip_search}")
         print(f"  스킵 레이어: {self.skip_layers}")
         print(f"  출력: {output_dir}")
         print("=" * 60)

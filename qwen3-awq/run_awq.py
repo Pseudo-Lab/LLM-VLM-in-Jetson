@@ -53,6 +53,8 @@ def main():
                         help="양자화 비트 수")
     parser.add_argument("--group-size", type=int, default=128,
                         help="그룹 양자화 크기")
+    parser.add_argument("--clip-search", action="store_true",
+                        help="그룹별 weight clipping 탐색 활성화 (outlier로 인한 해상도 낭비 방지)")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="출력 디렉토리 (기본: ./outputs/<model>-awq-<calib>)")
     parser.add_argument("--skip-layers", type=str, nargs="*", default=None,
@@ -65,6 +67,7 @@ def main():
         model_name=args.model,
         w_bit=args.w_bit,
         group_size=args.group_size,
+        clip_search=args.clip_search,
         skip_layers=skip_layers,
     )
 

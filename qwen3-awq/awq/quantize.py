@@ -43,6 +43,8 @@ def pseudo_quantize_tensor(
     w_bit: int = 4,
     group_size: int = 128,
     zero_point: bool = True,
+    clip_search: bool = False,
+    clip_ratios: tuple = (1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7),
 ) -> tuple[torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
     """
     Weight 텐서를 symmetric / asymmetric INT-N으로 pseudo-quantize합니다.
@@ -53,6 +55,9 @@ def pseudo_quantize_tensor(
         w_bit     : quantization bits (보통 4)
         group_size: 그룹 quantization 단위 (in_features 방향으로 분할)
         zero_point: True → asymmetric (zero-point 사용), False → symmetric
+        clip_search: True면 그룹별로 min/max를 얼마나 잘라낼지(clip ratio) 탐색.
+                     outlier 하나가 그룹 전체 scale을 키워 해상도를 낭비하는 것을 방지
+        clip_ratios: 탐색할 clip 비율 후보
 
     Returns:
         w_dequant : quantize → dequantize된 FP weight (shape 동일)
@@ -76,27 +81,49 @@ def pseudo_quantize_tensor(
 
     w = w.reshape(out_features, n_groups, group_size)
 
-    if zero_point:
-        w_max = w.amax(dim=-1, keepdim=True)
-        w_min = w.amin(dim=-1, keepdim=True)
-        q_max = (1 << w_bit) - 1  # 15 for INT4
-        scale = (w_max - w_min) / q_max
-        scale = scale.clamp(min=1e-8)
-        zero = (-w_min / scale).round().clamp(0, q_max)
-    else:
-        w_abs_max = w.abs().amax(dim=-1, keepdim=True)
-        q_max = (1 << (w_bit - 1)) - 1  # 7 for INT4
-        scale = w_abs_max / q_max
-        scale = scale.clamp(min=1e-8)
-        zero = None
+    ratios = clip_ratios if clip_search else (1.0,)
+    best_err = None
+    best = None  # (w_dequant, scale, zero)
 
-    if zero_point:
-        w_int = (w / scale + zero).round().clamp(0, (1 << w_bit) - 1)
-        w_dequant = (w_int - zero) * scale
-    else:
-        w_int = (w / scale).round().clamp(-q_max, q_max)
-        w_dequant = w_int * scale
+    for ratio in ratios:
+        if zero_point:
+            w_max = w.amax(dim=-1, keepdim=True) * ratio
+            w_min = w.amin(dim=-1, keepdim=True) * ratio
+            q_max = (1 << w_bit) - 1  # 15 for INT4
+            scale = (w_max - w_min) / q_max
+            scale = scale.clamp(min=1e-8)
+            zero = (-w_min / scale).round().clamp(0, q_max)
+            w_int = (w / scale + zero).round().clamp(0, q_max)
+            w_dq = (w_int - zero) * scale
+        else:
+            w_abs_max = w.abs().amax(dim=-1, keepdim=True) * ratio
+            q_max = (1 << (w_bit - 1)) - 1  # 7 for INT4
+            scale = w_abs_max / q_max
+            scale = scale.clamp(min=1e-8)
+            zero = None
+            w_int = (w / scale).round().clamp(-q_max, q_max)
+            w_dq = w_int * scale
 
+        if not clip_search:
+            best = (w_dq, scale, zero)
+            break
+
+        # 그룹별 재구성 오차로 최적 ratio 선택
+        err = (w_dq - w).pow(2).sum(dim=-1, keepdim=True)  # [out, n_groups, 1]
+        if best_err is None:
+            best_err = err
+            best = (w_dq, scale, zero)
+        else:
+            better = err < best_err  # [out, n_groups, 1]
+            best_err = torch.where(better, err, best_err)
+            b_dq, b_scale, b_zero = best
+            b_dq = torch.where(better, w_dq, b_dq)
+            b_scale = torch.where(better, scale, b_scale)
+            if zero_point:
+                b_zero = torch.where(better, zero, b_zero)
+            best = (b_dq, b_scale, b_zero)
+
+    w_dequant, scale, zero = best
     w_dequant = w_dequant.reshape(out_features, in_features)
     scale = scale.squeeze(-1)  # [out_features, n_groups]
     if zero is not None:
@@ -180,6 +207,7 @@ def awq_quantize_linear(
     w_bit: int = 4,
     group_size: int = 128,
     zero_point: bool = True,
+    clip_search: bool = False,
 ) -> dict:
     """
     단일 nn.Linear 레이어에 AWQ quantization을 적용합니다.
@@ -223,6 +251,7 @@ def awq_quantize_linear(
     w_scaled = w * best_scale.unsqueeze(0)
     w_dequant_scaled, _, _ = pseudo_quantize_tensor(
         w_scaled, w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+        clip_search=clip_search,
     )
     w_final = w_dequant_scaled / best_scale.unsqueeze(0)
     del w, w_scaled, w_dequant_scaled
@@ -230,6 +259,7 @@ def awq_quantize_linear(
     # w_final을 INT4로 양자화하여 export용 패킹
     w_dequant_final, scale, zero = pseudo_quantize_tensor(
         w_final, w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+        clip_search=clip_search,
     )
 
     out_features, in_features = w_final.shape
@@ -294,6 +324,7 @@ def quantize_model(
     w_bit = awq_cfg["w_bit"]
     group_size = awq_cfg["group_size"]
     zero_point = awq_cfg["zero_point"]
+    clip_search = awq_cfg.get("clip_search", False)
 
     quant_results = {}
 
@@ -313,6 +344,7 @@ def quantize_model(
         result = awq_quantize_linear(
             module, act_stats[name],
             w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+            clip_search=clip_search,
         )
 
         # weight를 dequantized 값으로 치환 (추론 호환성 유지)
