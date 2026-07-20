@@ -52,15 +52,18 @@ class AWQQuantizer:
         group_size: int = 128,
         zero_point: bool = True,
         clip_search: bool = False,
+        search_mode: str = "weight",
         skip_layers: set[str] | None = None,
         device_map: str = "auto",
         trust_remote_code: bool = True,
     ):
+        assert search_mode in ("weight", "output"), f"unknown search_mode: {search_mode}"
         self.model_name = model_name
         self.w_bit = w_bit
         self.group_size = group_size
         self.zero_point = zero_point
         self.clip_search = clip_search
+        self.search_mode = search_mode
         self.skip_layers = skip_layers or DEFAULT_SKIP_PATTERNS
         self.device_map = device_map
         self.trust_remote_code = trust_remote_code
@@ -77,6 +80,7 @@ class AWQQuantizer:
         group_size: int = 128,
         zero_point: bool = True,
         clip_search: bool = False,
+        search_mode: str = "weight",
         skip_layers: set[str] | None = None,
     ) -> "AWQQuantizer":
         """이미 로드된 모델과 토크나이저로 AWQQuantizer를 생성합니다."""
@@ -86,6 +90,7 @@ class AWQQuantizer:
         instance.group_size = group_size
         instance.zero_point = zero_point
         instance.clip_search = clip_search
+        instance.search_mode = search_mode
         instance.skip_layers = skip_layers or DEFAULT_SKIP_PATTERNS
         instance.device_map = "auto"
         instance.trust_remote_code = True
@@ -125,12 +130,16 @@ class AWQQuantizer:
                 "dataset": calib_data,
                 "n_samples": n_samples,
                 "seq_len": seq_len,
+                # 출력-오차 탐색에는 레이어별 입력 서브샘플 캐시가 필요
+                "collect_inputs": self.search_mode == "output",
+                "n_input_rows": 512,
             },
             "awq": {
                 "w_bit": self.w_bit,
                 "group_size": self.group_size,
                 "zero_point": self.zero_point,
                 "clip_search": self.clip_search,
+                "search_mode": self.search_mode,
                 "skip_layers": self.skip_layers,
             },
         }
@@ -164,19 +173,20 @@ class AWQQuantizer:
         print(f"  AWQ Quantization Pipeline")
         print(f"  모델: {self.model_name}")
         print(f"  Calibration: {calib_data} ({n_samples} samples, seq_len={seq_len})")
-        print(f"  양자화: INT{self.w_bit}, group_size={self.group_size}, clip_search={self.clip_search}")
+        print(f"  양자화: INT{self.w_bit}, group_size={self.group_size}, "
+              f"clip_search={self.clip_search}, search_mode={self.search_mode}")
         print(f"  스킵 레이어: {self.skip_layers}")
         print(f"  출력: {output_dir}")
         print("=" * 60)
 
         # Step 1: Calibration
         print(f"\n[1/3] Calibration ({calib_data})...")
-        act_stats = run_calibration(self.model, self.tokenizer, config)
+        act_stats, input_cache = run_calibration(self.model, self.tokenizer, config)
         print(f"  {len(act_stats)}개 레이어 통계 수집 완료")
 
         # Step 2: Quantize
         print(f"\n[2/3] AWQ 양자화 적용 중...")
-        model, quant_results = quantize_model(self.model, act_stats, config)
+        model, quant_results = quantize_model(self.model, act_stats, config, input_cache=input_cache)
         self._model = model
         print(f"  양자화 완료 ({len(quant_results)}개 레이어)")
 

@@ -89,12 +89,29 @@ class ActivationCollector:
     """
     nn.Linear 레이어의 입력 activation을 hook으로 수집하고
     채널별 통계(mean absolute value)를 기록합니다.
+
+    collect_inputs=True이면 출력-오차 기반 scale/clip 탐색(공식 AWQ 방식)에 쓸
+    입력 서브샘플도 함께 캐시합니다. 레이어당 최대 n_input_rows 행을
+    fp16/CPU로 보관하므로 메모리 부담이 작습니다
+    (예: 253 레이어 × 512행 × hidden 2560 × 2B ≈ 0.7GB).
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        collect_inputs: bool = False,
+        n_input_rows: int = 512,
+        n_calib_samples: int = 128,
+    ):
         self.stats: dict[str, torch.Tensor] = {}   # layer_name -> abs_mean per input channel
         self._hooks = []
         self._layer_names: dict = {}               # module -> name
+
+        self.collect_inputs = collect_inputs
+        self.n_input_rows = n_input_rows
+        # calibration 전체에 걸쳐 고르게 뽑히도록 forward 1회당 캐시할 행 수
+        self._rows_per_call = max(1, n_input_rows // max(1, n_calib_samples))
+        self._input_rows: dict[str, list[torch.Tensor]] = {}
+        self._input_counts: dict[str, int] = {}
 
     def register(self, model: torch.nn.Module) -> None:
         """모든 Linear 레이어에 forward hook 등록."""
@@ -123,6 +140,18 @@ class ActivationCollector:
             # 누적 평균 (온라인 방식)
             self.stats[name] = (self.stats[name] + abs_mean) / 2.0
 
+        if self.collect_inputs and self._input_counts.get(name, 0) < self.n_input_rows:
+            k = min(self._rows_per_call, x.shape[0],
+                    self.n_input_rows - self._input_counts.get(name, 0))
+            idx = torch.randperm(x.shape[0], device=x.device)[:k]
+            rows = x[idx].to(torch.float16).cpu()
+            self._input_rows.setdefault(name, []).append(rows)
+            self._input_counts[name] = self._input_counts.get(name, 0) + k
+
+    def get_input_cache(self) -> dict[str, torch.Tensor]:
+        """레이어별로 캐시한 입력 행들을 [n_rows, in_features] 텐서로 합쳐 반환."""
+        return {name: torch.cat(rows, dim=0) for name, rows in self._input_rows.items()}
+
     def remove(self) -> None:
         """등록된 hook 제거."""
         for hook in self._hooks:
@@ -138,10 +167,13 @@ def run_calibration(
     model: torch.nn.Module,
     tokenizer,
     config: dict,
-) -> dict[str, torch.Tensor]:
+) -> tuple[dict[str, torch.Tensor], dict[str, torch.Tensor]]:
     """
     Calibration 데이터를 forward pass하여 각 레이어의
     입력 activation 통계를 수집합니다.
+
+    config["calibration"]["collect_inputs"]가 True이면 출력-오차 탐색용
+    입력 서브샘플 캐시도 함께 수집합니다.
 
     Args:
         model: 원본 FP16 모델
@@ -149,7 +181,10 @@ def run_calibration(
         config: 설정 딕셔너리
 
     Returns:
-        layer_name -> abs_mean_per_channel 딕셔너리
+        (act_stats, input_cache)
+          act_stats  : layer_name -> abs_mean_per_channel
+          input_cache: layer_name -> [n_rows, in_features] 입력 서브샘플
+                       (collect_inputs=False이면 빈 딕셔너리)
     """
     calib_cfg = config["calibration"]
     device = next(model.parameters()).device
@@ -162,7 +197,11 @@ def run_calibration(
         seq_len=calib_cfg["seq_len"],
     )
 
-    collector = ActivationCollector()
+    collector = ActivationCollector(
+        collect_inputs=calib_cfg.get("collect_inputs", False),
+        n_input_rows=calib_cfg.get("n_input_rows", 512),
+        n_calib_samples=len(samples),
+    )
     collector.register(model)
     model.eval()
 
@@ -175,7 +214,11 @@ def run_calibration(
     collector.remove()
 
     print(f"Collected activation stats for {len(collector.stats)} layers.")
-    return collector.stats
+    input_cache = collector.get_input_cache() if collector.collect_inputs else {}
+    if input_cache:
+        total_mb = sum(t.numel() * t.element_size() for t in input_cache.values()) / 1e6
+        print(f"Cached input subsamples for {len(input_cache)} layers ({total_mb:.0f} MB).")
+    return collector.stats, input_cache
 
 
 # ---------------------------------------------------------------------------
@@ -194,7 +237,7 @@ def main():
         trust_remote_code=True,
     )
 
-    act_stats = run_calibration(model, tokenizer, config)
+    act_stats, _ = run_calibration(model, tokenizer, config)
 
     # 확인용 출력
     for name, stat in list(act_stats.items())[:5]:

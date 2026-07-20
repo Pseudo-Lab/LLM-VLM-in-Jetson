@@ -55,6 +55,10 @@ def main():
                         help="그룹 양자화 크기")
     parser.add_argument("--clip-search", action="store_true",
                         help="그룹별 weight clipping 탐색 활성화 (outlier로 인한 해상도 낭비 방지)")
+    parser.add_argument("--search-mode", type=str, default="weight",
+                        choices=["weight", "output"],
+                        help="scale/clip 탐색 목적함수: weight(재구성 오차, 기존) | "
+                             "output(출력 오차, 공식 AWQ 방식 — 입력 서브샘플 캐시 사용)")
     parser.add_argument("--output-dir", type=str, default=None,
                         help="출력 디렉토리 (기본: ./outputs/<model>-awq-<calib>)")
     parser.add_argument("--skip-layers", type=str, nargs="*", default=None,
@@ -68,6 +72,7 @@ def main():
         w_bit=args.w_bit,
         group_size=args.group_size,
         clip_search=args.clip_search,
+        search_mode=args.search_mode,
         skip_layers=skip_layers,
     )
 
