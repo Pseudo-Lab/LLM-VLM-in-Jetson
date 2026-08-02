@@ -162,6 +162,10 @@ python3 chat.py
 
 `history` 리스트로 이전 대화를 함께 보내므로 문맥이 유지됩니다. 종료는 `quit` 또는 Ctrl+C.
 
+실행 예시:
+
+![채팅 예시](examples/chat_example.png)
+
 ---
 
 ## 문제 해결 (Troubleshooting)
