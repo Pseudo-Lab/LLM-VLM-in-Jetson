@@ -13,9 +13,19 @@ replace_with_tf_no_memory_issue/train.py (those two were byte-identical aside
 from which `modeling_*` module they imported) by picking the right modeling
 class from ./modeling/ at runtime based on --model/--replace.
 
---replace none skips training entirely and produces a pruned model by directly
-wiring layer (pruning_start_layer - 1) to layer (pruning_end_layer + 1), then
-saving the result with save_pretrained.
+Regardless of --replace, the output is a ready-to-use, full-size HF checkpoint
+(save_pretrained + tokenizer) at args.output_dir/<model>_prune_from<s>to<e>_<replace>/,
+loadable directly with AutoModelForCausalLM.from_pretrained — for --replace mlp
+specifically, the replacement layer is a bare MLP that doesn't fit the stock
+decoder-layer shape, so a small modeling_pruned_<model>.py + config.json
+auto_map are shipped alongside it, requiring trust_remote_code=True to load.
+
+--replace none skips training entirely and produces that model immediately by
+directly wiring layer (pruning_start_layer - 1) to layer (pruning_end_layer + 1).
+For --replace mlp/tf, only the single best-eval-loss checkpoint is kept on
+disk, overwritten in place on every improvement; every eval (not just
+improvements) is additionally logged to <same_dir>_eval_log.csv (global_step,
+eval_loss, saved) for later analysis.
 
 Usage:
     python retrain_pruned_layer.py --model <llama|opt> --replace <none|mlp|tf> \
@@ -23,9 +33,9 @@ Usage:
         [--model_name <path_or_hf_id>] [--data_path <local_dir>]
 """
 
+import csv
 import importlib
 import os
-import re
 from itertools import chain
 
 import torch
@@ -44,6 +54,7 @@ from transformers import (
 
 from args import ModelArguments, TrainingArguments
 from LLM_Streamline.scheduler import get_cosine_schedule_with_warmup
+from modeling.prune_utils import assemble_pruned_model, replace_best_checkpoint, save_pruned_model
 
 
 if __name__ == "__main__":
@@ -101,50 +112,30 @@ if __name__ == "__main__":
 
     if args.replace == "none":
         # ─────────────────────────────────────────────────────────────────────
-        # "none" replace: pure layer pruning, no training
+        # "none" replace: pure layer pruning, no training — one ready-to-use
+        # model, saved immediately.
         # ─────────────────────────────────────────────────────────────────────
-        n_pruned = args.pruning_end_layer - args.pruning_start_layer + 1
-
         print(f"Loading pretrained weights from {MODEL_NAME} ...")
-        pretrained = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
-        pretrained_dict = pretrained.state_dict()
-        del pretrained
-        torch.cuda.empty_cache()
+        pretrained_dict = AutoModelForCausalLM.from_pretrained(MODEL_NAME).state_dict()
 
-        config = AutoConfig.from_pretrained(MODEL_NAME)
-        original_n_layers = config.num_hidden_layers
-        config.num_hidden_layers -= n_pruned
+        pruned_model, _ = assemble_pruned_model(
+            pretrained_dict=pretrained_dict,
+            model_name=MODEL_NAME,
+            model_family=args.model,
+            replace=args.replace,
+            pruning_start_layer=args.pruning_start_layer,
+            pruning_end_layer=args.pruning_end_layer,
+        )
 
-        pruned_model = AutoModelForCausalLM.from_config(config)
-        pruned_dict = pruned_model.state_dict()
-
-        if args.model == "llama":
-            layer_re = re.compile(r"^model\.layers\.(\d+)\.(.*)")
-            layer_fmt = "model.layers.{j}.{rest}"
-        else:  # opt
-            layer_re = re.compile(r"^model\.decoder\.layers\.(\d+)\.(.*)")
-            layer_fmt = "model.decoder.layers.{j}.{rest}"
-
-        for key, value in pretrained_dict.items():
-            m = layer_re.match(key)
-            if m:
-                i, rest = int(m.group(1)), m.group(2)
-                if args.pruning_start_layer <= i <= args.pruning_end_layer:
-                    continue  # drop pruned layers
-                j = i if i < args.pruning_start_layer else i - n_pruned
-                new_key = layer_fmt.format(j=j, rest=rest)
-            else:
-                new_key = key
-            if new_key in pruned_dict:
-                pruned_dict[new_key] = value
-
-        save_path = os.path.join(args.output_dir, f"{args.model}_prune_from{args.pruning_start_layer}to{args.pruning_end_layer}_{args.replace}.pt")
-        pruned_model.load_state_dict(pruned_dict)
-        torch.save(pruned_model.state_dict(), save_path)
+        tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+        save_dir = os.path.join(
+            args.output_dir,
+            f"{args.model}_prune_from{args.pruning_start_layer}to{args.pruning_end_layer}_{args.replace}",
+        )
+        save_pruned_model(pruned_model, tokenizer, save_dir, args.model, args.replace, replace_layer_index=None)
         print(
-            f"Pruned model saved to {save_path}  "
-            f"(layers {args.pruning_start_layer}–{args.pruning_end_layer} removed, "
-            f"{original_n_layers} → {config.num_hidden_layers} layers)"
+            f"Pruned model saved to {save_dir}  "
+            f"(layers {args.pruning_start_layer}–{args.pruning_end_layer} removed)"
         )
 
     else:
@@ -239,7 +230,7 @@ if __name__ == "__main__":
             dataset, shuffle=True, collate_fn=data_collator, batch_size=args.batch_size
         )
         eval_dataloader = DataLoader(
-            eval_dataset, shuffle=False, collate_fn=data_collator, batch_size=args.batch_size * 2
+            eval_dataset, shuffle=False, collate_fn=data_collator, batch_size=args.batch_size * 1
         )
 
         # ─────────────────────────────────────────────────────────────────────
@@ -266,11 +257,15 @@ if __name__ == "__main__":
         mse_loss = nn.MSELoss()
         best_eval_loss = float("inf")
         global_step = 0
+        no_improve_evals = 0
+        should_stop = False
 
         # ─────────────────────────────────────────────────────────────────────
         # Training loop
         # ─────────────────────────────────────────────────────────────────────
         for epoch in range(args.epochs):
+            if should_stop:
+                break
             model.train()
             for step, batch in tqdm(enumerate(train_dataloader), desc=f"Epoch {epoch}"):
                 with accelerator.accumulate(model):
@@ -309,21 +304,64 @@ if __name__ == "__main__":
                             )
 
                     eval_loss = torch.cat(eval_losses).mean().item()
+                    is_new_best = eval_loss < best_eval_loss
+                    if is_new_best:
+                        best_eval_loss = eval_loss
+                        no_improve_evals = 0
+                    else:
+                        no_improve_evals += 1
+
                     if accelerator.is_main_process:
                         print(f"Step {global_step} — eval MSE loss: {eval_loss:.6f}")
 
-                    if eval_loss < best_eval_loss:
-                        best_eval_loss = eval_loss
-                        unwrapped = accelerator.unwrap_model(model)
-                        replace_layer = (
-                            unwrapped.replace_layer if args.model == "llama"
-                            else unwrapped.decoder.replace_layer
+                        # R2b: log every eval (not just improvements) for later analysis.
+                        csv_path = os.path.join(
+                            args.output_dir,
+                            f"{args.model}_prune_from{args.pruning_start_layer}to{args.pruning_end_layer}_{args.replace}_eval_log.csv",
                         )
-                        torch.save(
-                            replace_layer.state_dict(),
-                            os.path.join(
+                        write_header = not os.path.exists(csv_path)
+                        with open(csv_path, "a", newline="") as f:
+                            writer = csv.writer(f)
+                            if write_header:
+                                writer.writerow(["global_step", "eval_loss", "saved"])
+                            writer.writerow([global_step, eval_loss, int(is_new_best)])
+
+                        # R2a: only the single best checkpoint is kept on disk —
+                        # assembling and overwriting it on every improvement.
+                        if is_new_best:
+                            unwrapped = accelerator.unwrap_model(model)
+                            replace_layer = (
+                                unwrapped.replace_layer if args.model == "llama"
+                                else unwrapped.decoder.replace_layer
+                            )
+                            pruned_model, replace_layer_index = assemble_pruned_model(
+                                pretrained_dict=pretrained_dict,
+                                model_name=MODEL_NAME,
+                                model_family=args.model,
+                                replace=args.replace,
+                                pruning_start_layer=args.pruning_start_layer,
+                                pruning_end_layer=args.pruning_end_layer,
+                                replace_layer_state_dict=replace_layer.state_dict(),
+                            )
+                            tmp_dir = os.path.join(args.output_dir, ".tmp_best_checkpoint")
+                            save_pruned_model(
+                                pruned_model, tokenizer, tmp_dir, args.model, args.replace, replace_layer_index
+                            )
+                            final_dir = os.path.join(
                                 args.output_dir,
-                                f"{args.model}_prune_from{args.pruning_start_layer}to{args.pruning_end_layer}_{args.replace}_step{global_step}.pt",
-                            ),
-                        )
+                                f"{args.model}_prune_from{args.pruning_start_layer}to{args.pruning_end_layer}_{args.replace}",
+                            )
+                            replace_best_checkpoint(tmp_dir, final_dir)
+                            print(f"New best (eval MSE {eval_loss:.6f}) saved to {final_dir}")
+                            del pruned_model
+
+                    if args.patience and no_improve_evals >= args.patience:
+                        if accelerator.is_main_process:
+                            print(
+                                f"No new best eval loss for {no_improve_evals} consecutive evals "
+                                f"— stopping early at step {global_step}."
+                            )
+                        should_stop = True
+                        break
+
                     model.train()
