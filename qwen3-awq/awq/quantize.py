@@ -43,6 +43,9 @@ def pseudo_quantize_tensor(
     w_bit: int = 4,
     group_size: int = 128,
     zero_point: bool = True,
+    clip_search: bool = False,
+    clip_ratios: tuple = (1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7),
+    x: Optional[torch.Tensor] = None,
 ) -> tuple[torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
     """
     Weight 텐서를 symmetric / asymmetric INT-N으로 pseudo-quantize합니다.
@@ -53,6 +56,14 @@ def pseudo_quantize_tensor(
         w_bit     : quantization bits (보통 4)
         group_size: 그룹 quantization 단위 (in_features 방향으로 분할)
         zero_point: True → asymmetric (zero-point 사용), False → symmetric
+        clip_search: True면 그룹별로 min/max를 얼마나 잘라낼지(clip ratio) 탐색.
+                     outlier 하나가 그룹 전체 scale을 키워 해상도를 낭비하는 것을 방지
+        clip_ratios: 탐색할 clip 비율 후보
+        x         : [n_rows, in_features] calibration 입력 서브샘플 (선택).
+                    주어지면 clip 탐색이 weight 재구성 오차 대신
+                    그룹별 출력 오차 ‖x_g·(Q(w_g)−w_g)ᵀ‖² 를 기준으로 선택 (공식 AWQ 방식).
+                    weight 오차 기준은 activation이 큰 채널의 salient weight를
+                    잘라내 성능을 해칠 수 있음 (kowikitext 실험에서 −3.2%p 확인)
 
     Returns:
         w_dequant : quantize → dequantize된 FP weight (shape 동일)
@@ -76,27 +87,67 @@ def pseudo_quantize_tensor(
 
     w = w.reshape(out_features, n_groups, group_size)
 
-    if zero_point:
-        w_max = w.amax(dim=-1, keepdim=True)
-        w_min = w.amin(dim=-1, keepdim=True)
-        q_max = (1 << w_bit) - 1  # 15 for INT4
-        scale = (w_max - w_min) / q_max
-        scale = scale.clamp(min=1e-8)
-        zero = (-w_min / scale).round().clamp(0, q_max)
-    else:
-        w_abs_max = w.abs().amax(dim=-1, keepdim=True)
-        q_max = (1 << (w_bit - 1)) - 1  # 7 for INT4
-        scale = w_abs_max / q_max
-        scale = scale.clamp(min=1e-8)
-        zero = None
+    # 출력 오차 기준 clip 탐색용: 입력을 그룹 단위로 재배열 [n_groups, n_rows, group_size]
+    x_grouped = None
+    if clip_search and x is not None:
+        x_grouped = (
+            x.to(device=w.device, dtype=w.dtype)
+            .reshape(-1, n_groups, group_size)
+            .permute(1, 0, 2)
+            .contiguous()
+        )
 
-    if zero_point:
-        w_int = (w / scale + zero).round().clamp(0, (1 << w_bit) - 1)
-        w_dequant = (w_int - zero) * scale
-    else:
-        w_int = (w / scale).round().clamp(-q_max, q_max)
-        w_dequant = w_int * scale
+    ratios = clip_ratios if clip_search else (1.0,)
+    best_err = None
+    best = None  # (w_dequant, scale, zero)
 
+    for ratio in ratios:
+        if zero_point:
+            w_max = w.amax(dim=-1, keepdim=True) * ratio
+            w_min = w.amin(dim=-1, keepdim=True) * ratio
+            q_max = (1 << w_bit) - 1  # 15 for INT4
+            scale = (w_max - w_min) / q_max
+            scale = scale.clamp(min=1e-8)
+            zero = (-w_min / scale).round().clamp(0, q_max)
+            w_int = (w / scale + zero).round().clamp(0, q_max)
+            w_dq = (w_int - zero) * scale
+        else:
+            w_abs_max = w.abs().amax(dim=-1, keepdim=True) * ratio
+            q_max = (1 << (w_bit - 1)) - 1  # 7 for INT4
+            scale = w_abs_max / q_max
+            scale = scale.clamp(min=1e-8)
+            zero = None
+            w_int = (w / scale).round().clamp(-q_max, q_max)
+            w_dq = w_int * scale
+
+        if not clip_search:
+            best = (w_dq, scale, zero)
+            break
+
+        if x_grouped is not None:
+            # 그룹별 출력 오차로 최적 ratio 선택 (전체 출력은 그룹 기여의 합이므로
+            # 그룹별 독립 선택이 유효한 근사 — 공식 AutoAWQ의 clip 탐색과 동일한 방식)
+            diff = (w_dq - w).permute(1, 2, 0)              # [n_groups, group, out]
+            out_err = torch.bmm(x_grouped, diff)            # [n_groups, n_rows, out]
+            err = out_err.pow(2).sum(dim=1).T.unsqueeze(-1)  # [out, n_groups, 1]
+            del diff, out_err
+        else:
+            # 그룹별 weight 재구성 오차로 최적 ratio 선택
+            err = (w_dq - w).pow(2).sum(dim=-1, keepdim=True)  # [out, n_groups, 1]
+        if best_err is None:
+            best_err = err
+            best = (w_dq, scale, zero)
+        else:
+            better = err < best_err  # [out, n_groups, 1]
+            best_err = torch.where(better, err, best_err)
+            b_dq, b_scale, b_zero = best
+            b_dq = torch.where(better, w_dq, b_dq)
+            b_scale = torch.where(better, scale, b_scale)
+            if zero_point:
+                b_zero = torch.where(better, zero, b_zero)
+            best = (b_dq, b_scale, b_zero)
+
+    w_dequant, scale, zero = best
     w_dequant = w_dequant.reshape(out_features, in_features)
     scale = scale.squeeze(-1)  # [out_features, n_groups]
     if zero is not None:
@@ -116,18 +167,23 @@ def search_best_scale(
     group_size: int = 128,
     zero_point: bool = True,
     n_grid: int = 20,
+    x: Optional[torch.Tensor] = None,
 ) -> torch.Tensor:
     """
     AWQ의 핵심: 최적 per-channel scale factor s를 grid search로 찾습니다.
 
     개념:
       - 원래 weight W에 대해 스케일링된 weight W_s = W * diag(s) 를 quantize
-      - quantization 오류 ||W_s_dequant - W_s||를 최소화하는 s를 찾음
+      - quantization 오류를 최소화하는 s를 찾음
       - 단, s는 activation magnitude (act_scales) 기반으로 탐색 범위를 정함
 
-    수식:
-      s* = argmin_s  ||quant(W * diag(s)) - W * diag(s)||_F
-      탐색 범위: s ∈ [act_scales^0, act_scales^1], grid step = 1/n_grid
+    목적함수 (두 모드):
+      weight 오차 (x=None, 기존 방식):
+        s* = argmin_s  ||quant(W·diag(s)) − W·diag(s)||
+      출력 오차 (x 제공, 공식 AWQ 방식):
+        s* = argmin_s  ||quant(W·diag(s))·(X/s)ᵀ − W·Xᵀ||
+        — activation이 큰 채널의 오차에 자동으로 가중치가 실려
+          salient weight 보호가 출력 기준으로 정확해짐
 
     Args:
         w          : [out_features, in_features] FP weight
@@ -136,19 +192,18 @@ def search_best_scale(
         group_size : 그룹 사이즈
         zero_point : asymmetric 여부
         n_grid     : scale 탐색 grid 수
+        x          : [n_rows, in_features] calibration 입력 서브샘플 (선택)
 
     Returns:
         best_scale : [in_features] 최적 scale factor
-
-    # TODO: 아래 구현부를 완성하세요.
-    #
-    # 힌트:
-    #   - alpha를 0 ~ 1 사이로 grid search: s = act_scales^alpha
-    #   - 각 alpha에 대해 W_scaled = W * s, quantize 후 오류 계산
-    #   - 오류가 최소인 alpha(→ scale)를 반환
     """
     act_scales = act_scales.to(device=w.device, dtype=w.dtype)
     act_scales = act_scales.clamp(min=1e-8)
+
+    ref_out = None
+    if x is not None:
+        x = x.to(device=w.device, dtype=w.dtype)
+        ref_out = x @ w.T                            # [n_rows, out] — FP 기준 출력
 
     best_error = float("inf")
     best_scale = torch.ones_like(act_scales)
@@ -161,7 +216,13 @@ def search_best_scale(
         w_dequant, _, _ = pseudo_quantize_tensor(
             w_scaled, w_bit=w_bit, group_size=group_size, zero_point=zero_point,
         )
-        error = (w_dequant - w_scaled).abs().mean().item()
+
+        if ref_out is not None:
+            # Q(W·s)·(X/s)ᵀ = (X/s) @ Q(W·s)ᵀ 와 FP 출력의 오차
+            out = (x / scale_candidate.unsqueeze(0)) @ w_dequant.T
+            error = (out - ref_out).pow(2).mean().item()
+        else:
+            error = (w_dequant - w_scaled).abs().mean().item()
 
         if error < best_error:
             best_error = error
@@ -180,6 +241,8 @@ def awq_quantize_linear(
     w_bit: int = 4,
     group_size: int = 128,
     zero_point: bool = True,
+    clip_search: bool = False,
+    x: Optional[torch.Tensor] = None,
 ) -> dict:
     """
     단일 nn.Linear 레이어에 AWQ quantization을 적용합니다.
@@ -193,6 +256,9 @@ def awq_quantize_linear(
         w_bit      : bits
         group_size : group size
         zero_point : asymmetric 여부
+        clip_search: 그룹별 clip ratio 탐색 여부
+        x          : [n_rows, in_features] calibration 입력 서브샘플 (선택).
+                     주어지면 scale/clip 탐색을 출력 오차 기준으로 수행 (공식 AWQ 방식)
 
     Returns:
         {
@@ -201,51 +267,72 @@ def awq_quantize_linear(
           "zeros"  : zero-point (또는 None),
           "best_scale": AWQ scale factor (s*)
         }
-
-    # TODO: 아래 구현부를 완성하세요.
-    #
-    # 단계:
-    #   1. search_best_scale() 로 최적 s 탐색
-    #   2. W_scaled = W * diag(s) 적용
-    #   3. pseudo_quantize_tensor() 로 quantize → scale, zero 획득
-    #   4. pack_int4_weight() (pack.py) 로 INT4 packing
-    #   5. 반환 딕셔너리 구성
     """
     from .pack import pack_int4_weight
 
     w = _materialize_weight(linear).cpu()
+    orig_dtype = w.dtype
+    # fp16으로 계산하면 w * act_scales^alpha가 overflow(inf)할 수 있음
+    # (예: Qwen3 down_proj의 activation outlier) → 계산은 fp32, 저장만 원래 dtype
+    w = w.float()
+
+    # 출력-오차 탐색은 grid마다 [n_rows×in]·[in×out] matmul이 필요해 CPU로는 느림 → GPU 사용
+    search_device = "cuda" if (x is not None and torch.cuda.is_available()) else "cpu"
+    w = w.to(search_device)
+    if x is not None:
+        x = x.to(device=search_device, dtype=torch.float32)
 
     best_scale = search_best_scale(
-        w, act_scales.cpu(), w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+        w, act_scales.float(), w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+        x=x,
     )
 
     # AWQ: scale → quantize → unscale로 최적 FP16 weight 생성
+    # 출력-오차 clip은 스케일된 공간에서 입력이 X/s이므로 x도 동일하게 보정
+    x_scaled = (x / best_scale.unsqueeze(0)) if x is not None else None
     w_scaled = w * best_scale.unsqueeze(0)
     w_dequant_scaled, _, _ = pseudo_quantize_tensor(
         w_scaled, w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+        clip_search=clip_search, x=x_scaled,
     )
     w_final = w_dequant_scaled / best_scale.unsqueeze(0)
-    del w, w_scaled, w_dequant_scaled
+    del w, w_scaled, w_dequant_scaled, x_scaled
 
-    # w_final을 INT4로 양자화하여 export용 패킹
-    w_dequant_final, scale, zero = pseudo_quantize_tensor(
+    # w_final을 INT4로 양자화하여 export용 패킹 (원래 공간이므로 x 그대로 사용)
+    _, scale, zero = pseudo_quantize_tensor(
         w_final, w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+        clip_search=clip_search, x=x,
     )
+    del x
+
+    # 이후 packing 단계는 CPU에서 수행 (기존 경로와 동일하게 유지)
+    w_final = w_final.cpu()
+    scale = scale.cpu()
+    zero = zero.cpu() if zero is not None else None
+    best_scale = best_scale.cpu()
+
+    # scale은 원래 dtype(fp16)으로 저장되므로, w_int와 w_dequant도
+    # 저장될 scale 기준으로 계산해야 INT4 파일과 모델 weight가 정확히 일치
+    scale = scale.to(orig_dtype)
+    scale_f = scale.float()
 
     out_features, in_features = w_final.shape
     n_groups = in_features // group_size
     w_reshaped = w_final.reshape(out_features, n_groups, group_size)
     del w_final
-    scale_expanded = scale.unsqueeze(-1)
+    scale_expanded = scale_f.unsqueeze(-1).clamp(min=1e-8)
 
     if zero_point and zero is not None:
         zero_expanded = zero.unsqueeze(-1)
         w_int = (w_reshaped / scale_expanded + zero_expanded).round().clamp(0, (1 << w_bit) - 1)
+        w_dequant_final = ((w_int - zero_expanded) * scale_expanded)
     else:
         q_max = (1 << (w_bit - 1)) - 1
         w_int = (w_reshaped / scale_expanded).round().clamp(-q_max, q_max)
+        w_dequant_final = (w_int * scale_expanded)
     del w_reshaped, scale_expanded
 
+    w_dequant_final = w_dequant_final.reshape(out_features, in_features).to(orig_dtype)
     w_int = w_int.reshape(out_features, in_features).to(torch.int32)
     w_int_T = w_int.T.contiguous()
     del w_int
@@ -269,31 +356,35 @@ def quantize_model(
     model: nn.Module,
     act_stats: dict[str, torch.Tensor],
     config: dict,
+    input_cache: Optional[dict[str, torch.Tensor]] = None,
 ) -> nn.Module:
     """
     모델의 모든 Linear 레이어에 AWQ를 순차적으로 적용합니다.
 
     Args:
-        model     : 원본 FP16 모델
-        act_stats : calibration.py에서 얻은 {layer_name: act_scale} 딕셔너리
-        config    : config.yaml 설정
+        model      : 원본 FP16 모델
+        act_stats  : calibration.py에서 얻은 {layer_name: act_scale} 딕셔너리
+        config     : config.yaml 설정
+        input_cache: {layer_name: [n_rows, in_features]} 입력 서브샘플 (선택).
+                     awq.search_mode가 "output"이면 이 캐시로 출력-오차 탐색 수행
 
     Returns:
         quantized_model: AWQ가 적용된 모델
                          (실제 INT4 커널은 export.py에서 vLLM 포맷으로 변환)
-
-    # TODO: 레이어 순회 및 awq_quantize_linear 호출 로직을 완성하세요.
-    #
-    # 힌트:
-    #   - model.named_modules()로 순회
-    #   - layer_name이 act_stats에 있는 Linear만 처리
-    #   - awq_quantize_linear() 결과를 모델에 반영
-    #     (AWQLinear 같은 커스텀 모듈로 교체하거나, weight를 직접 치환)
     """
     awq_cfg = config["awq"]
     w_bit = awq_cfg["w_bit"]
     group_size = awq_cfg["group_size"]
     zero_point = awq_cfg["zero_point"]
+    clip_search = awq_cfg.get("clip_search", False)
+    search_mode = awq_cfg.get("search_mode", "weight")
+    input_cache = input_cache or {}
+
+    if search_mode == "output" and not input_cache:
+        raise ValueError(
+            "search_mode='output'이지만 input_cache가 비어 있습니다. "
+            "calibration에서 collect_inputs=True로 입력 서브샘플을 수집하세요."
+        )
 
     quant_results = {}
 
@@ -310,9 +401,12 @@ def quantize_model(
                   f"group_size({group_size})로 나누어지지 않아 FP16으로 유지합니다.")
             continue
 
+        x = input_cache.get(name) if search_mode == "output" else None
+
         result = awq_quantize_linear(
             module, act_stats[name],
             w_bit=w_bit, group_size=group_size, zero_point=zero_point,
+            clip_search=clip_search, x=x,
         )
 
         # weight를 dequantized 값으로 치환 (추론 호환성 유지)
