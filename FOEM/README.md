@@ -1,149 +1,162 @@
-# 10th-template
+# ShortGPT Depth Pruning 사용법
 
-<h1 align="center"> 10th Template </h1>
+Transformer의 **레이어(깊이) 단위 structured 프루닝** 구현입니다. 잉여 레이어를 통째로 제거합니다. **레이어 개수 자체를 줄여** llama.cpp 같은 dense 런타임에서 메모리·속도가 실제로 줄어듭니다.
 
-<div align="center">
-<a href="https://pseudo-lab.com"><img src="https://img.shields.io/badge/PseudoLab-S10-3776AB" alt="PseudoLab"/></a>
-<a href="https://discord.gg/EPurkHVtp2"><img src="https://img.shields.io/badge/Discord-BF40BF" alt="Discord Community"/></a>
-<a href="https://github.com/Pseudo-Lab/10th-template/stargazers"><img src="https://img.shields.io/github/stars/Pseudo-Lab/10th-template" alt="Stars Badge"/></a>
-<a href="https://github.com/Pseudo-Lab/10th-template/network/members"><img src="https://img.shields.io/github/forks/Pseudo-Lab/10th-template" alt="Forks Badge"/></a>
-<a href="https://github.com/Pseudo-Lab/10th-template/pulls"><img src="https://img.shields.io/github/issues-pr/Pseudo-Lab/10th-template" alt="Pull Requests Badge"/></a>
-<a href="https://github.com/Pseudo-Lab/10th-template/issues"><img src="https://img.shields.io/github/issues/Pseudo-Lab/10th-template" alt="Issues Badge"/></a>
-<a href="https://github.com/Pseudo-Lab/10th-template/graphs/contributors"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/Pseudo-Lab/10th-template?color=2b9348"></a>
-<a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fpseudo-lab%2F10th-template&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
-</div>
-<br>
+<details>
+<summary>dense 런타임?</summary>
 
-<!-- sheilds: https://shields.io/ -->
-<!-- hits badge: https://hits.seeyoufarm.com/ -->
+**dense 런타임** = 가중치를 **dense tensor 그대로 저장·계산**하는 실행 환경 (llama.cpp / GGUF 등). 0인 값도 그대로 저장하고 곱합니다.
 
-> Welcome to OOO repository! We aim to OOO, offering tools and frameworks for OOO, OOO, and OOO. Join us in advancing the field of OOO through open collaboration and innovation!
+프루닝 종류에 따라 효과가 갈립니다:
 
-🚀 {{프로젝트명}} — 가짜연구소 템플릿 프로젝트
-“함께 만드는 우연한 혁명(Serendipity Revolution)”
-진실함과 신뢰를 바탕으로 AI/DS 혁신 커뮤니티와 기술 실험을 진행합니다.
+| 프루닝 종류 | 하는 일 | dense 런타임에서 |
+|---|---|---|
+| **Unstructured (마스킹, 예: Wanda)** | 일부 가중치를 **0으로** | 텐서 크기 그대로 → **이득 없음** (0도 저장·계산). sparse 런타임에서만 0을 건너뛰어 이득 |
+| **Structured (ShortGPT depth, width)** | **레이어/차원을 통째로 제거** | 텐서가 **물리적으로 작아짐** → 메모리·속도 **실제 감소** |
 
-## 🌟 프로젝트 목표 (Project Vision)
-_"이론에서 실전까지, 함께 성장하는 AI 실험실"_  
-- Graph-based RAG 스터디 및 프로젝트
-- 개인 성장과 집단 지혜의 시너지 창출
-- 오픈소스 정신을 바탕으로 한 지식 공유 문화
-- 실패를 성공의 디딤돌로 만드는 실험적 접근
-- 논문 리뷰 프로젝트 — 최신 AI 논문 분석, 토론, 실험 재현
-- 책 기반 스터디 — 머신러닝/데이터사이언스 주요 서적 공동 학습 및 적용
-- 오픈소스 프로젝트 — AI·데이터 처리 관련 라이브러리 개발 및 개선
-- 컨퍼런스 논문 투고 — 최신 연구 수행 및 국제 학회 제출 준비
+즉 배포 런타임이 dense(ex. llama.cpp on Jetson)라면, **레이어를 진짜로 없애는 structured 프루닝** 일 경우 메모리가 줄어듭니다.
+</details>
 
+---
 
-## 🧑 역동적인 팀 소개 (Dynamic Team)
+## 1. 원리 (Block Influence)
 
-| 역할          | 이름 |  기술 스택 배지                                                                 | 주요 관심 분야                          |
-|---------------|------|-----------------------------------------------------------------------|----------------------------------------|
-| **Project Manager** | 김찬란 | ![Python](https://img.shields.io/badge/Python-Expert-3776AB) ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C) | 생성형 AI/추천 시스템 최적화             |
-| **Member** | 레오나르도 다빈치 | ![SQL](https://img.shields.io/badge/SQL-Advanced-003B57) ![BigQuery](https://img.shields.io/badge/BigQuery-4285F4) | 데이터 파이프라인 설계                  |
+각 레이어 `i`의 **Block Influence(BI)** 를 보정 데이터로 측정합니다:
 
-
-## 🚀 프로젝트 로드맵 (Project Roadmap)
-```mermaid
-gantt
-    title 2025 AI 프로젝트 여정
-    section 핵심 마일스톤
-    이론 연구       :a1, 2025-09-01, 30d
-    MVP 개발        :a2, after a1, 45d
-    프로덕션 적용    :a3, after a2, 30d
-    section 부가 활동
-    기술 세미나     :2025-10-15, 7d
-    해커톤         :2025-11-20, 3d
+```
+BI_i = 1 - mean_cosine(레이어 입력 hidden, 레이어 출력 hidden)
 ```
 
+- 입력 ≈ 출력 (코사인 ≈ 1) → 레이어가 잔차 스트림을 **거의 안 바꿈** → 잉여 → **BI 낮음 → 제거 대상**
+- 입력 ≠ 출력 → 레이어가 **열심히 일함** → BI 높음 → 보존
 
-## 🛠️ 우리의 개발 문화 (Our Development Culture)
-**우리의 개발 문화**  
+→ BI가 낮은 레이어부터 `ratio` 만큼 제거하고, **남는 레이어의 원래 순서는 보존**합니다.
+(ShortGPT 논문: arXiv 2403.03853)
+
+---
+
+## 2. shortGPT 적용 가능 모델
+
+이 구현은 **`model.model.layers` 가 transformer 레이어 리스트(`nn.ModuleList`)인 표준 HF decoder** 를 가정합니다. (ex. Llama, Qwen, Mistral, Gemma)
+
+단, MoE 혹은 Mamba 계열의 경우 레이어를 통으로 날리는 shortGPT에는 적합하지 않습니다. 예를 들어, MoE의 경우 Expert가 모여있는 레이어를 날릴 수도 있습니다.
+
+## 3. calibration
+
+- `Block Influence`를 구하기 위해 레이어 입력과 출력을 구해야하는데, 이는 실제 데이터를 넣고 forward를 해야 나옵니다.
+- 따라서 calibration 데이터로 forward를 돌려야 레이어별 활성값을 얻고, 그걸로 `BI`를 구합니다.
+- calibration data는 사용할 메인 언어로 지정하면 됩니다.
+- `calibration.datasets` 에는 **아무 HF 데이터셋**이나 넣을 수 있습니다 (`text`/`instruction`/`question`/`output` 등 필드를 자동 추출)
+- calibration dataset은 한국어 BI를 측정하는 용도이기 때문에, 어느 것을 사용하든 상관없습니다.
+
+---
+
+## 4. 파일 구성
+
+`run_depth_prune.py`가 이들을 import
+
+| 파일 | 역할 |
+|---|---|
+| `shortgpt/scripts/run_depth_prune.py` | 실행 진입점 (yaml → 로드→측정→제거→저장) |
+| `shortgpt/configs/prune_phi4.yaml` | 설정 예시 |
+| `shortgpt/src/prune/depth_prune.py` | **핵심**: `compute_block_influence()` + `prune_depth()` |
+| `shortgpt/src/prune/calibration.py` | 보정 데이터 로드 + 토크나이즈 |
+| `shortgpt/src/prune/report.py` | 결과 리포트 출력 (run script가 import) |
+| `shortgpt/src/common/model_loader.py` | 모델 로딩 (run script가 import) |
+| `shortgpt/src/common/param_stats.py` | 파라미터 카운트 (`depth_prune.py`가 import) |
+
+
+---
+
+## 5. 환경
+
+**uv**
+
+```bash
+cd shortgpt
+uv sync                      
+
+# 실행: uv run python scripts/...  또는 .venv/bin/python scripts/...
+```
+
+**pip**
+
+```bash
+cd shortgpt
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt   
+```
+---
+
+## 6. 실행 방법
+
+```bash
+cd shortgpt
+.venv/bin/python scripts/run_depth_prune.py --config configs/prune_phi4.yaml
+# 출력 디렉토리를 바꾸려면:
+.venv/bin/python scripts/run_depth_prune.py --config configs/prune_phi4.yaml --out artifacts/my-pruned
+```
+
+### 설정 파일 (`configs/prune_phi4.yaml`)
+```yaml
+model:
+  name: microsoft/phi-4        # HF 모델 ID 또는 로컬 경로
+  dtype: bfloat16
+prune:
+  ratio: 0.30                  # 제거할 레이어 비율 (0.30 = 레이어의 30% 제거, 예: 40층 → 28층). 논문의 대표 결과는 LLaMA2에서 25~27%
+calibration:
+  datasets:                    # BI 측정용 한국어 보정 텍스트 (HF 데이터셋)
+    - MarkrAI/KoCommercial-Dataset
+    - beomi/KoAlpaca-RealQA
+    - beomi/kowikitext-qa-ref-detail-preview
+  seq_len: 1024                # 보정 시퀀스 길이. 논문값
+  n_samples: 256               # 보정 샘플 수 (많을수록 BI 안정적, 메모리 사용량은 증가). 임의값
+  seed: 42
+output:
+  dir: artifacts/phi4-pruned   # 결과 저장 경로 (--out 으로 덮어쓰기 가능)
+```
+
+### 실행하면 보이는 출력
+```
+Block Influence per layer: [0.44, 0.18, 0.13, ... 0.05]   # 레이어별 BI (낮을수록 잉여)
+Layers kept: [0, 1, 2, ..., 26, 38]                       # 남긴 레이어 인덱스
+=== Pruning Report ===
+params: 14,659,...  ->  10,569,...  (27.9% 감축)
+메모리(4bit 추정): 7.33GB -> 5.28GB
+```
+→ 결과 모델은 `output.dir` 에 표준 HF 포맷(`model.safetensors`+`config.json`+토크나이저)으로 저장됩니다. 그대로 `AutoModelForCausalLM.from_pretrained()` 로 로드/평가/서빙 가능.
+
+---
+
+## 7. 코드 사용
+
+스크립트 없이 함수만 가져다 쓸 수도 있습니다:
+
 ```python
-class CollaborationFramework:
-    def __init__(self):
-        self.tools = {
-            'communication': 'Discord',
-            'version_control': 'GitHub Projects',
-            'ci/cd': 'GitHub Actions',
-            'docs': 'Github Wiki'
-        }
-    
-    def workflow(self):
-        return """주간 사이클:
-        1️⃣ 월요일: 스프린트 플래닝 (Notion 타임라인 공유)
-        2️⃣ 수요일: 코드 리뷰 세션 (Live Share)
-        3️⃣ 금요일: 데모데이 (실제 적용 사례 발표)"""
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from src.prune.calibration import load_korean_texts, tokenize_texts
+from src.prune.depth_prune import compute_block_influence, prune_depth
+
+model = AutoModelForCausalLM.from_pretrained("microsoft/phi-4", torch_dtype=torch.bfloat16, device_map="cuda")
+tok = AutoTokenizer.from_pretrained("microsoft/phi-4")
+
+# 1) 보정 데이터 준비
+texts = load_korean_texts(["beomi/kowikitext-qa-ref-detail-preview"], n_samples=128, seed=42)
+input_ids, attn = tokenize_texts(texts, tok, seq_len=1024, return_mask=True)
+batch = {"input_ids": input_ids.cuda(), "attention_mask": attn.cuda()}
+
+# 2) Block Influence 측정
+bi = compute_block_influence(model, [batch])   #  레이어별 텐서
+
+# 3) 낮은 BI 레이어 30% 제거
+model, info = prune_depth(model, ratio=0.30, bi_scores=bi)
+print(info["layers_kept"], info["ratio_actual"])
+
+# 4) 저장
+model.save_pretrained("my-pruned"); tok.save_pretrained("my-pruned")
 ```
 
-
-## 📈 성과 지표 (Achievement Metrics)
-**2024 주요 KPI**  
-| 지표                     | 목표치 | 현재 달성률 |
-|--------------------------|--------|-------------|
-| 커밋 수                  | 1,200  | 83%         |
-| 이슈 해결률              | 95%    | 89%         | 
-| 기술 블로그 게시물       | 24편   | 15편        |
-| 오픈소스 기여도          | 8회    | 5회         |
+---
 
 
-## 💻 주차별 활동 (Activity History)
-
-| 날짜 | 내용 | 발표자 | 
-| -------- | -------- | ---- |
-| 2025/02/ | OT       |      |
-| 2025/02/ |  Part 1. | 미정 | 
-| 2025/02/ |  Part 2. | 미정 | 
-| 2025/02/ |  Part 3. | 미정 | 
-| 2025/03/ |  Part 4. | 미정 | 
-| 2025/03/ |  Part 5. | 미정 | 
-
-
-
-## 💡 학습 자원 (Learning Resources)
-**우리가 만든 지식 허브**  
-- [AI Playbook](https://github.com/your-org/ai-playbook): 150+ 페이지의 실전 가이드
-- [MLOps Pipeline Template](https://github.com/your-org/mlops-template): 재사용 가능한 인프라 코드
-- [Failure Journal](https://your-org.github.io/failure-journal): 50+개의 실패 사례 분석 [31][34]
-
-
-## 🌱 참여 안내 (How to Engage)
-- 빌더로 참여 — 프로젝트 기획·운영 주도
-- 러너로 참여 — 연구·개발·테스트 등 실행
-- 청강 참여 — 공개 세션 참여 가능
-
-❗️참여 링크: [가짜연구소 디스코드](https://discord.gg/EPurkHVtp2)
-❗️커뮤니케이션 채널: 디스코드 #{{채널명}}
-
-**누구나 청강을 통해 모임을 참여하실 수 있습니다.**  
-1. 특별한 신청 없이 정기 모임 시간에 맞추어 디스코드 #Room-GH 채널로 입장
-2. Magical Week 중 행사에 참가
-3. Pseudo Lab 행사에서 만나기
-
-## Acknowledgement 🙏
-
-이 프로젝트는 가짜연구소 Open Academy로 진행됩니다.
-여러분의 참여와 기여가 ‘우연한 혁명(Serendipity Revolution)’을 가능하게 합니다. 모두에게 깊은 감사를 전합니다.
-OOO is developed as part of Pseudo-Lab's Open Research Initiative. Special thanks to our contributors and the open source community for their valuable insights and contributions.
-
-## About Pseudo Lab 👋🏼</h2>
-
-[Pseudo-Lab](https://pseudo-lab.com/) is a non-profit organization focused on advancing machine learning and AI technologies. Our core values of Sharing, Motivation, and Collaborative Joy drive us to create impactful open-source projects. With over 5k+ researchers, we are committed to advancing machine learning and AI technologies.
-
-<h2>Contributors 😃</h2>
-<a href="https://github.com/Pseudo-Lab/10th-template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Pseudo-Lab/10th-template" />
-</a>
-<br><br>
-
-<h2>License 🗞</h2>
-
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
-🚩 추가 팁 (Usage Tips)
-- 각 항목 내 {{ }} 표시된 부분을 프로젝트에 맞게 꼭 수정하세요.
-- 불필요한 프로젝트 유형 예시는 제거하거나 교체해 명확하게 하세요.
-- 로드맵과 활동내역 부분에 Mermaid 다이어그램 등을 이용해 시각적으로 표현하는 것을 추천합니다.
-- 체크박스(✅)와 표를 적절히 활용하면 진행 상황 한눈에 파악이 쉽습니다.
-- ‘빌더’와 ‘러너’의 역할 분담과 상호 피드백 문화 강화에 README 내 문장으로 강조를 절대 잊지 마세요.
-- README가 단순 안내서 이상으로 공동체 철학과 가치를 담는 협업 선언문임을 인지하고, 누구나 읽고 이해하기 쉽도록 간결 명료하게 작성하세요.
