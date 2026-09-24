@@ -236,3 +236,5 @@ outputs/
 *.safetensors
 *.jinja
 *.log
+tokenizer.json
+tekken.json

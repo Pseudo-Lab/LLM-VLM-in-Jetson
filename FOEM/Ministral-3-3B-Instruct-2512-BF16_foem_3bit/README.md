@@ -121,6 +121,30 @@
 
 ---
 
+## K-DTCBench 평가 결과
+
+| 항목 | 값 |
+|---|---|
+| 데이터셋 | NCSOFT/K-DTCBench (document/table/chart, test) |
+| Shot | zero-shot |
+| 문항 수 | 240 |
+| **정확도 (micro=macro)** | **50.83%** |
+| 평가 소요 시간 | 1.5 분 |
+
+<details><summary>카테고리별 정확도</summary>
+
+| 카테고리 | 정확도 | 문항 수 |
+|---|---:|---:|
+| document | 58.75% | 80 |
+| table | 56.25% | 80 |
+| chart | 37.50% | 80 |
+
+</details>
+
+> **K-DTCBench**: 한국어 문서·표·차트 이미지 기반 4지선다 VQA 벤치마크. vision tower는 BF16으로 유지되고 텍스트 디코더만 3-bit 양자화됨 — BF16 원본(62.08%) 대비 -11.25%p로, KMMLU(-11.30%p)와 비슷한 폭의 손실을 보인다. chart 카테고리 손실이 -15.00%p로 가장 크다. 상세 분석: `pseudo/KDTCBENCH_REPORT.md`.
+
+---
+
 ## 양자화 품질
 
 ### 전체 통계

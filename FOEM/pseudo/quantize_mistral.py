@@ -4,7 +4,7 @@
 일반 GPTQ 와 FOEM 을 같은 코드로 산출한다. 차이는 QuantizeConfig 에 foem= 인자 유무뿐.
 양자화 완료 후 저장 디렉토리 안에 README.md 를 자동 생성한다.
 
-저장 경로: /workspace/LLM-VLM-in-Jetson/{모델명}_{method}_{bits}bit/
+저장 경로: /workspace/LLM-VLM-in-Jetson/FOEM/{모델명}_{method}_{bits}bit/
 
   python quantize_mistral.py --method gptq --bits 4
   python quantize_mistral.py --method foem --bits 4
@@ -22,14 +22,16 @@ from datasets import load_dataset
 from huggingface_hub import snapshot_download
 
 from eval_kmmlu import KMMLU_SUBJECTS, evaluate_all
+from eval_kdtcbench import evaluate_all as evaluate_all_kdtc, load_model as load_model_kdtc
 from gptqmodel import GPTQModel, QuantizeConfig
+from gptqmodel.quantization.config import FORMAT
 
 try:
     from gptqmodel import FOEMConfig
 except ImportError:
     FOEMConfig = None
 
-BASE_OUT_DIR = "/workspace/LLM-VLM-in-Jetson"
+BASE_OUT_DIR = "/workspace/LLM-VLM-in-Jetson/FOEM"
 
 
 # ── loss 캡처용 로그 핸들러 ──────────────────────────────────────────────────
@@ -73,26 +75,62 @@ def _attach_capture() -> _LossCapture:
 
 
 # ── calibration ──────────────────────────────────────────────────────────────
-def get_calibration(nsamples: int):
+# 캘리브레이션 문서 하나가 비정상적으로 길면(수천~수만 토큰) eager 어텐션의
+# O(seqlen^2) 특성상 배치 크기와 무관하게 단일 샘플만으로도 OOM 을 유발할 수 있다.
+# c4 는 웹 크롤링이라 원래 짧은 경우가 대부분이지만, 허브 쪽 데이터가 갱신되며
+# 드물게 매우 긴 문서가 섞여 들어올 수 있음이 실제로 확인됐다 (alpha>0 실험 중
+# batch_size=1 에서도 7.33GiB 단일 할당 시도로 OOM). 소스에 관계없이 모든
+# 캘리브레이션 텍스트에 길이 캡을 일괄 적용해 이 문제를 원천 차단한다.
+CALIB_MAX_CHARS = 2000
+
+
+def get_calibration(nsamples: int, lang: str = "en") -> tuple[list[str], str]:
+    """returns (texts, dataset_label) — label is recorded in the README."""
+    if lang == "ko":
+        try:
+            import itertools
+            import random
+            # 항상 문서 처음(0번 글자)부터 자르면 256개 샘플이 전부 "OOO는 ~이다"
+            # 식 백과사전 서두 문체로 편중돼 c4(웹 크롤링, 문체 다양)보다 오히려 분포가
+            # 좁아진다. ① 스트림에서 매 STEP 번째 문서만 골라 주제 다양성을 확보하고,
+            # ② 각 문서 내에서도 무작위 시작 위치에서 잘라 본문 다양성을 확보한다.
+            STEP = 10
+            rng = random.Random(0)
+            ds = load_dataset("wikimedia/wikipedia", "20231101.ko", split="train", streaming=True)
+            texts = []
+            for ex in itertools.islice(ds, 0, nsamples * STEP, STEP):
+                t = ex["text"]
+                if not t.strip():
+                    continue
+                start = rng.randint(0, max(0, len(t) - CALIB_MAX_CHARS))
+                texts.append(t[start:start + CALIB_MAX_CHARS])
+            if texts:
+                return texts, f"wikimedia/wikipedia (20231101.ko, every {STEP}th doc, random {CALIB_MAX_CHARS}자 crop)"
+        except Exception as e:
+            print(f"[calib] 한국어 위키 로드 실패 ({e}); 영어 c4 로 폴백")
+
     try:
         ds = load_dataset(
             "allenai/c4",
             data_files="en/c4-train.00001-of-01024.json.gz",
             split="train",
         )
-        return ds.select(range(nsamples))["text"]
+        texts = [t[:CALIB_MAX_CHARS] for t in ds.select(range(nsamples))["text"]]
+        return texts, f"allenai/c4 (en, {CALIB_MAX_CHARS}자 절단)"
     except Exception as e:
         print(f"[calib] c4 로드 실패 ({e}); wikitext2 로 폴백")
         ds = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
-        texts = [t for t in ds["text"] if t.strip()]
-        return texts[:nsamples]
+        texts = [t[:CALIB_MAX_CHARS] for t in ds["text"] if t.strip()]
+        return texts[:nsamples], f"wikitext-2 (fallback, {CALIB_MAX_CHARS}자 절단)"
 
 
 # ── README 생성 ───────────────────────────────────────────────────────────────
 def write_readme(out_dir: str, args, model_path: str, calib_len: int,
                  rows: list[dict], elapsed: float,
                  ppl_result: dict | None = None,
-                 kmmlu_result: dict | None = None):
+                 kmmlu_result: dict | None = None,
+                 calib_label: str = "allenai/c4 (폴백: wikitext-2)",
+                 kdtcbench_result: dict | None = None):
     import torch
 
     gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"
@@ -224,6 +262,35 @@ def write_readme(out_dir: str, args, model_path: str, calib_len: int,
     else:
         kmmlu_section = "\n> KMMLU 평가 생략 (--skip-kmmlu 옵션 사용)\n\n"
 
+    # ── K-DTCBench 섹션 ───────────────────────────────────────────────────────
+    if kdtcbench_result:
+        per_cat_rows = "\n".join(
+            f"| {cat} | {v['correct']/v['total']:.2%} | {v['total']} |"
+            for cat, v in kdtcbench_result["per_category"].items()
+        )
+        kdtcbench_section = f"""
+## K-DTCBench 평가 결과
+
+| 항목 | 값 |
+|---|---|
+| 데이터셋 | NCSOFT/K-DTCBench (document/table/chart, test) |
+| Shot | zero-shot |
+| 문항 수 | {kdtcbench_result["n_questions"]} |
+| **정확도 (micro=macro)** | **{kdtcbench_result["accuracy"]:.2%}** |
+| 평가 소요 시간 | {kdtcbench_result["elapsed"]/60:.1f} 분 |
+
+<details><summary>카테고리별 정확도</summary>
+
+| 카테고리 | 정확도 | 문항 수 |
+|---|---:|---:|
+{per_cat_rows}
+
+</details>
+
+"""
+    else:
+        kdtcbench_section = "\n> K-DTCBench 평가 생략 (--skip-kdtcbench 옵션 사용)\n\n"
+
     # ── worst 5 ───────────────────────────────────────────────────────────────
     worst5 = sorted(rows, key=lambda x: x["loss"], reverse=True)[:5]
     worst_table = "| 레이어 | 모듈 | loss |\n|---|---|---:|\n"
@@ -296,6 +363,8 @@ FOEM(First-Order Error Matters, AAAI 2026)은 기본 GPTQ 가중치 갱신식에
 | 양자화 방법 | **{args.method.upper()}** |
 | 비트 | **{args.bits}-bit** |
 | group_size | {args.group_size} |
+| desc_act (act-order) | {args.desc_act} |
+| mixed_precision | {args.mixed_precision}{f" ({args.mixed_precision_bits}-bit)" if args.mixed_precision != "none" else ""} |
 | attn_impl | {args.attn} |
 | offload_to_disk | {args.offload_disk} |
 
@@ -313,13 +382,14 @@ FOEM(First-Order Error Matters, AAAI 2026)은 기본 GPTQ 가중치 갱신식에
 
 | 항목 | 값 |
 |---|---|
-| 데이터셋 | allenai/c4 (폴백: wikitext-2) |
+| 데이터셋 | {calib_label} |
 | 샘플 수 | {calib_len} |
 | batch_size | {args.batch_size} |
 {algo_section}
 ---
 {ppl_section}---
 {kmmlu_section}---
+{kdtcbench_section}---
 
 ## 양자화 품질
 
@@ -560,6 +630,42 @@ def eval_kmmlu_quantized(out_dir: str, model_path: str, shots: int = 5) -> dict:
     return result
 
 
+# ── K-DTCBench 평가 ─────────────────────────────────────────────────────────
+def eval_kdtcbench_quantized(out_dir: str, model_path: str) -> dict:
+    """양자화 완료 직후 K-DTCBench (문서/표/차트 240문항) 정확도를 측정한다.
+
+    eval_kmmlu_quantized() 와 동일한 패턴: 저장된 out_dir 을 재로드하여 평가.
+    """
+    import time
+
+    import torch
+    from datasets import load_dataset as _load_dataset
+    from transformers import AutoProcessor
+
+    print(f"[kdtcbench] 양자화 모델 로드: {out_dir}")
+    t0 = time.time()
+
+    hf, qm = load_model_kdtc(out_dir, quant=True)
+    hf.eval()
+
+    try:
+        processor = AutoProcessor.from_pretrained(model_path)
+    except Exception:
+        processor = AutoProcessor.from_pretrained(out_dir)
+
+    dataset = _load_dataset("NCSOFT/K-DTCBench", split="test")
+    print(f"[kdtcbench] {len(dataset)}문항 평가 시작 (zero-shot) ...")
+    result = evaluate_all_kdtc(hf, processor, dataset)
+    result["elapsed"] = time.time() - t0
+    print(f"[kdtcbench] micro={result['accuracy']:.2%}  macro={result['macro_accuracy']:.2%}  "
+          f"({result['elapsed']/60:.1f} 분)")
+
+    del hf, qm
+    torch.cuda.empty_cache()
+
+    return result
+
+
 def _get_pkg_ver(pkg: str) -> str:
     try:
         import importlib.metadata
@@ -579,6 +685,10 @@ def main():
     ap.add_argument("--nsamples", type=int, default=256)
     ap.add_argument("--batch-size", type=int, default=4)
     ap.add_argument("--group-size", type=int, default=128)
+    ap.add_argument("--desc-act", action="store_true", default=False,
+                    help="act-order 활성화 (activation 크기 순으로 열을 재정렬 후 양자화 — 정확도↑, 시간↑)")
+    ap.add_argument("--calib-lang", default="en", choices=["en", "ko"],
+                    help="캘리브레이션 코퍼스 언어 (ko: 한국어 위키피디아, 평가셋이 한국어일 때 도움)")
     ap.add_argument("--alpha", type=float, default=0.0)
     ap.add_argument("--beta", type=float, default=0.2)
     # transformers 5.x SDPA 마스크의 meta-tensor .item() 버그 회피용.
@@ -592,6 +702,15 @@ def main():
     ap.add_argument("--skip-kmmlu", action="store_true", default=False,
                     help="KMMLU 평가 건너뜀 (45개 과목, 시간이 오래 걸림)")
     ap.add_argument("--kmmlu-shots", type=int, default=5)
+    ap.add_argument("--skip-kdtcbench", action="store_true", default=False,
+                    help="K-DTCBench 평가 건너뜀")
+    ap.add_argument("--mixed-precision", choices=["none", "modules", "layers"], default="none",
+                    help="modules: mlp.gate_proj/up_proj만 --mixed-precision-bits 로 상향, "
+                         "layers: 마지막 --mixed-precision-last-layers 개 레이어 전체를 상향")
+    ap.add_argument("--mixed-precision-bits", type=int, default=4)
+    ap.add_argument("--mixed-precision-last-layers", type=int, default=6)
+    ap.add_argument("--format", choices=["gptq", "gptq_v2"], default="gptq",
+                    help="gptq_v2: 레거시 v1 qzeros 변환을 건너뜀 (dynamic bits 혼합 시 v1 변환 버그 회피용)")
     args = ap.parse_args()
 
     base_name = args.model.split("/")[-1]
@@ -604,17 +723,43 @@ def main():
             "설치된 gptqmodel 에 FOEMConfig 가 없습니다. `pip install -U gptqmodel` 후 재시도."
         )
 
-    model_path = snapshot_download(args.model, local_files_only=True)
+    if os.path.isdir(args.model):
+        model_path = args.model
+    else:
+        model_path = snapshot_download(args.model, local_files_only=True)
     print(f"[model] local path: {model_path}")
 
-    qcfg = dict(bits=args.bits, group_size=args.group_size, offload_to_disk=args.offload_disk)
+    qcfg = dict(bits=args.bits, group_size=args.group_size, offload_to_disk=args.offload_disk,
+                desc_act=args.desc_act,
+                format=FORMAT.GPTQ_V2 if args.format == "gptq_v2" else FORMAT.GPTQ)
     if args.method == "foem":
         qcfg["foem"] = FOEMConfig(alpha=args.alpha, beta=args.beta, device="auto")
+
+    dynamic = None
+    if args.mixed_precision == "modules":
+        # gate_proj/up_proj 는 SwiGLU 게이트 역할로 파라미터당 loss 가 가장 커 4-bit 로 상향.
+        dynamic = {
+            r"+:model\.language_model\.layers\.\d+\.mlp\.(gate_proj|up_proj)$":
+                {"bits": args.mixed_precision_bits},
+        }
+    elif args.mixed_precision == "layers":
+        # 후기 레이어(추론/맥락 이해 담당)일수록 loss 가 급증하는 경향이 있어
+        # 마지막 N개 레이어 전체를 4-bit 로 상향.
+        from transformers import AutoConfig
+        n_layers = AutoConfig.from_pretrained(model_path).text_config.num_hidden_layers
+        start = n_layers - args.mixed_precision_last_layers
+        dynamic = {
+            rf"+:model\.language_model\.layers\.({'|'.join(str(i) for i in range(start, n_layers))})\..*":
+                {"bits": args.mixed_precision_bits},
+        }
+    if dynamic is not None:
+        qcfg["dynamic"] = dynamic
+
     quant_config = QuantizeConfig(**qcfg)
     print(f"[config] {qcfg}")
 
-    calib = get_calibration(args.nsamples)
-    print(f"[calib] {len(calib)} samples")
+    calib, calib_label = get_calibration(args.nsamples, lang=args.calib_lang)
+    print(f"[calib] {len(calib)} samples from {calib_label}")
 
     cap = _attach_capture()
     t0 = time.time()
@@ -645,7 +790,15 @@ def main():
         except Exception as e:
             print(f"[kmmlu] 평가 실패 (README 에 생략으로 기록): {e}")
 
-    write_readme(out, args, model_path, len(calib), cap.rows, elapsed, ppl_result, kmmlu_result)
+    kdtcbench_result = None
+    if not args.skip_kdtcbench:
+        try:
+            kdtcbench_result = eval_kdtcbench_quantized(out, model_path)
+        except Exception as e:
+            print(f"[kdtcbench] 평가 실패 (README 에 생략으로 기록): {e}")
+
+    write_readme(out, args, model_path, len(calib), cap.rows, elapsed, ppl_result, kmmlu_result,
+                 calib_label=calib_label, kdtcbench_result=kdtcbench_result)
 
 
 if __name__ == "__main__":

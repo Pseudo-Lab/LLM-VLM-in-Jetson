@@ -9,8 +9,8 @@ from datasets import load_dataset
 from transformers import AutoTokenizer, AutoConfig
 
 BASE_PATH  = "/root/.cache/huggingface/hub/models--mistralai--Ministral-3-3B-Instruct-2512-BF16/snapshots/ecc3ba8b43a45610e709327c049d24b009bfec88"
-GPTQ_PATH  = "/workspace/LLM-VLM-in-Jetson/Ministral-3-3B-Instruct-2512-BF16_gptq_4bit"
-FOEM_PATH  = "/workspace/LLM-VLM-in-Jetson/Ministral-3-3B-Instruct-2512-BF16_foem_3bit"
+GPTQ_PATH  = "/workspace/LLM-VLM-in-Jetson/FOEM/Ministral-3-3B-Instruct-2512-BF16_gptq_4bit"
+FOEM_PATH  = "/workspace/LLM-VLM-in-Jetson/FOEM/Ministral-3-3B-Instruct-2512-BF16_foem_3bit"
 
 SUBJECTS   = ["Education", "Patent", "Law", "Information-Technology"]
 LETTERS    = ["A", "B", "C", "D"]

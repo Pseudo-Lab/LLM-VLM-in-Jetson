@@ -4,8 +4,8 @@ import ast
 import re
 import sys
 
-LOG_PATH = "/workspace/LLM-VLM-in-Jetson/logs/base_kmmlu.log"
-REPORT_PATH = "/workspace/LLM-VLM-in-Jetson/pseudo/KMMLU_REPORT.md"
+LOG_PATH = "/workspace/LLM-VLM-in-Jetson/FOEM/logs/base_kmmlu.log"
+REPORT_PATH = "/workspace/LLM-VLM-in-Jetson/FOEM/pseudo/KMMLU_REPORT.md"
 
 # 기존 GPTQ / FOEM 결과 (하드코딩)
 GPTQ = {

@@ -1,16 +1,18 @@
-# Ministral-3-3B-Instruct-2512-BF16_gptq_4bit
+# Ministral-3-3B-Instruct-2512-BF16_foem_3bit_mp_modules
 
-> 생성일: 2026-06-17 09:21
+> 생성일: 2026-07-08 06:18
 
 ## 모델 정보
 
 | 항목 | 값 |
 |---|---|
-| 원본 모델 | `mistralai/Ministral-3-3B-Instruct-2512-BF16` |
-| 양자화 방법 | **GPTQ** |
-| 비트 | **4-bit** |
+| 원본 모델 | `/root/.cache/huggingface/hub/models--mistralai--Ministral-3-3B-Instruct-2512-BF16/snapshots/ecc3ba8b43a45610e709327c049d24b009bfec88` |
+| 양자화 방법 | **FOEM** |
+| 비트 | **3-bit** |
 | group_size | 128 |
-| attn_impl | sdpa |
+| desc_act (act-order) | False |
+| mixed_precision | modules (4-bit) |
+| attn_impl | eager |
 | offload_to_disk | False |
 
 ## 환경
@@ -21,29 +23,48 @@
 | gptqmodel | 7.1.0 |
 | transformers | 5.12.1 |
 | torch | 2.11.0+cu128 |
-| 양자화 소요 시간 | 4.7 분 |
+| 양자화 소요 시간 | 4.2 분 |
 
 ## 캘리브레이션
 
 | 항목 | 값 |
 |---|---|
-| 데이터셋 | allenai/c4 (폴백: wikitext-2) |
+| 데이터셋 | allenai/c4 (en, 2000자 절단) |
 | 샘플 수 | 256 |
-| batch_size | 1 |
+| batch_size | 4 |
+
+## FOEM 설정
+
+| 파라미터 | 값 |
+|---|---|
+| alpha | 0.0 |
+| beta | 0.2 |
+
+- alpha=0.0 → 1차 보정(GPTAQ) 비활성화
+- beta=0.2 → 직접 오차 피드백 활성화
 
 ---
 
 ## 양자화 심층 분석
 
-### 2. GPTQ 알고리즘 원리
+### 2. FOEM 알고리즘 원리
+
+FOEM(First-Order Error Matters, AAAI 2026)은 기본 GPTQ 가중치 갱신식에 오차 피드백 항을 추가한다.
 
 ```
-ΔW = -e_i ⊗ H⁻¹[i,:]            ← 기본 GPTQ 항
+ΔW = -e_i ⊗ H⁻¹[i,:]            ← ① 기본 GPTQ 항
+     - (W - W_fp) · H⁻² · β     ← ② FOEM 직접 오차 피드백 (β=0.2)
 ```
 
-- `e_i`: i번째 열 양자화 시 발생한 오차
-- `H` (Hessian = XᵀX): 활성값 기반으로 각 가중치의 중요도를 반영
-- i번째 열을 양자화할 때 발생한 오차를 Hessian 역행렬을 통해 나머지 열에 분산시켜 보상
+| 기호 | 의미 |
+|---|---|
+| `e_i` | i번째 열 양자화 시 발생한 오차 |
+| `H` | 활성값 기반 Hessian 행렬 (XᵀX) |
+| `W_fp` | 누적 양자화 오차를 반영한 fp 가중치 |
+| `β` | 오차 피드백 강도 (이 실험: 0.2) |
+
+- **① GPTQ 항**: i번째 열 양자화 오차를 Hessian 역행렬로 나머지 열에 분산시켜 보상
+- **② FOEM β 항**: 이미 쌓인 누적 오차 `(W - W_fp)`를 다음 갱신에 직접 반영 → 오차가 전파되지 않고 흡수됨
 
 ---
 
@@ -54,8 +75,8 @@
 | 데이터셋 | WikiText-2 (test) |
 | 시퀀스 길이 | 2048 |
 | 슬라이딩 윈도우 수 | 147 |
-| **PPL** | **8.7238** |
-| 평가 소요 시간 | 1.3 분 |
+| **PPL** | **9.8179** |
+| 평가 소요 시간 | 1.4 분 |
 
 > **PPL (Perplexity)**: 언어 모델이 텍스트를 얼마나 잘 예측하는지 나타내는 지표.
 > 낮을수록 좋으며, 양자화 전후 PPL 차이가 클수록 품질 손실이 크다는 의미.
@@ -63,68 +84,7 @@
 
 ---
 
-## KMMLU 평가 결과
-
-| 항목 | 값 |
-|---|---|
-| 데이터셋 | KMMLU (45개 과목, test) |
-| Shot | 5-shot |
-| 문항 수 | 35030 |
-| **정확도 (micro)** | **44.19%** |
-| 정확도 (macro, 과목 평균) | 43.42% |
-| 평가 소요 시간 | 62.4 분 |
-
-<details><summary>과목별 정확도</summary>
-
-| 과목 | 정확도 | 문항 수 |
-|---|---:|---:|
-| Accounting | 37.00% | 100 |
-| Agricultural-Sciences | 36.10% | 1000 |
-| Aviation-Engineering-and-Maintenance | 41.50% | 1000 |
-| Biology | 36.90% | 1000 |
-| Chemical-Engineering | 47.30% | 1000 |
-| Chemistry | 48.00% | 600 |
-| Civil-Engineering | 41.50% | 1000 |
-| Computer-Science | 69.20% | 1000 |
-| Construction | 34.40% | 1000 |
-| Criminal-Law | 33.50% | 200 |
-| Ecology | 45.80% | 1000 |
-| Economics | 46.92% | 130 |
-| Education | 58.00% | 100 |
-| Electrical-Engineering | 34.30% | 1000 |
-| Electronics-Engineering | 52.90% | 1000 |
-| Energy-Management | 33.10% | 1000 |
-| Environmental-Science | 30.40% | 1000 |
-| Fashion | 44.60% | 1000 |
-| Food-Processing | 41.90% | 1000 |
-| Gas-Technology-and-Engineering | 36.40% | 1000 |
-| Geomatics | 39.80% | 1000 |
-| Health | 55.00% | 100 |
-| Industrial-Engineer | 40.50% | 1000 |
-| Information-Technology | 64.40% | 1000 |
-| Interior-Architecture-and-Design | 50.80% | 1000 |
-| Law | 42.60% | 1000 |
-| Machine-Design-and-Manufacturing | 42.80% | 1000 |
-| Management | 49.00% | 1000 |
-| Maritime-Engineering | 44.83% | 600 |
-| Marketing | 74.90% | 1000 |
-| Materials-Engineering | 44.80% | 1000 |
-| Mechanical-Engineering | 39.40% | 1000 |
-| Nondestructive-Testing | 45.40% | 1000 |
-| Patent | 32.00% | 100 |
-| Political-Science-and-Sociology | 47.33% | 300 |
-| Psychology | 43.20% | 1000 |
-| Public-Safety | 38.10% | 1000 |
-| Railway-and-Automotive-Engineering | 38.60% | 1000 |
-| Real-Estate | 38.50% | 200 |
-| Refrigerating-Machinery | 32.70% | 1000 |
-| Social-Welfare | 52.60% | 1000 |
-| Taxation | 40.00% | 200 |
-| Telecommunications-and-Wireless-Technology | 55.50% | 1000 |
-| Korean-History | 27.00% | 100 |
-| Math | 24.33% | 300 |
-
-</details>
+> KMMLU 평가 생략 (--skip-kmmlu 옵션 사용)
 
 ---
 
@@ -135,20 +95,18 @@
 | 데이터셋 | NCSOFT/K-DTCBench (document/table/chart, test) |
 | Shot | zero-shot |
 | 문항 수 | 240 |
-| **정확도 (micro=macro)** | **60.83%** |
-| 평가 소요 시간 | 1.4 분 |
+| **정확도 (micro=macro)** | **50.83%** |
+| 평가 소요 시간 | 1.5 분 |
 
 <details><summary>카테고리별 정확도</summary>
 
 | 카테고리 | 정확도 | 문항 수 |
 |---|---:|---:|
-| document | 67.50% | 80 |
-| table | 65.00% | 80 |
-| chart | 50.00% | 80 |
+| document | 62.50% | 80 |
+| table | 47.50% | 80 |
+| chart | 42.50% | 80 |
 
 </details>
-
-> **K-DTCBench**: 한국어 문서·표·차트 이미지 기반 4지선다 VQA 벤치마크. vision tower는 BF16으로 유지되고 텍스트 디코더만 4-bit 양자화됨 — BF16 원본(62.08%) 대비 -1.25%p로 KMMLU(-2.69%p)보다 손실이 작다. 상세 분석: `pseudo/KDTCBENCH_REPORT.md`.
 
 ---
 
@@ -191,14 +149,14 @@
 | 항목 | 값 |
 |---|---|
 | 원본 형식 | BF16 (16-bit) |
-| 양자화 비트 | 4-bit |
-| 이론 압축률 (선형 레이어) | 16 / 4 = **4.00×** |
+| 양자화 비트 | 3-bit |
+| 이론 압축률 (선형 레이어) | 16 / 3 = **5.33×** |
 | 선형 레이어 BF16 추정 크기 | 0.00 GB |
-| 실제 모델 파일 크기 | 3.22 GB |
+| 실제 모델 파일 크기 | 3.03 GB |
 | 실질 압축률 | **0.0×** |
 | group_size=128 오버헤드 | ~0 MB (scale+zero 파라미터) |
 
-> 이론 vs 실제 차이: 선형 레이어만 4-bit 양자화되고, embed·lm_head·vision tower·norms는 BF16 유지.
+> 이론 vs 실제 차이: 선형 레이어만 3-bit 양자화되고, embed·lm_head·vision tower·norms는 BF16 유지.
 
 ### 3. loss 지표 해석
 
@@ -234,7 +192,7 @@ loss = ||WX - W_q X||²
 
 
 후기 레이어일수록 활성값 variance가 크고 Hessian 고유값 분포가 넓어짐
-→ 4-bit으로 표현해야 할 값의 범위가 넓어져 양자화 오차 급증.
+→ 3-bit으로 표현해야 할 값의 범위가 넓어져 양자화 오차 급증.
 → **모델이 "추론"을 담당하는 레이어일수록 양자화 손실이 크다.**
 
 ### 6. 핵심 하이퍼파라미터 의미
@@ -260,14 +218,14 @@ Hessian 역행렬 계산 수치 안정화용 정규화. 이 실험에서 RTN 폴
 ```python
 from gptqmodel import GPTQModel
 
-model = GPTQModel.from_quantized("/workspace/LLM-VLM-in-Jetson/Ministral-3-3B-Instruct-2512-BF16_gptq_4bit")
+model = GPTQModel.from_quantized("/workspace/LLM-VLM-in-Jetson/Ministral-3-3B-Instruct-2512-BF16_foem_3bit_mp_modules")
 ```
 
 ## 파일 구성
 
 | 파일 | 설명 |
 |---|---|
-| `model.safetensors` | 양자화된 가중치 (3.2 GB) |
+| `model.safetensors` | 양자화된 가중치 (3.0 GB) |
 | `quantize_config.json` | 양자화 설정 |
 | `config.json` | 모델 아키텍처 설정 |
 | `tokenizer.json` | 토크나이저 |
