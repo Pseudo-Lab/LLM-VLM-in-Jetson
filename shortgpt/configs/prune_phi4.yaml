@@ -1,0 +1,16 @@
+model:
+  name: microsoft/phi-4
+  dtype: bfloat16
+prune:
+  ratio: 0.30                # 감축 비율. depth: 제거할 레이어 비율 / width: 차원 감축 비율 (0.30 = 30%)
+  importance: activation     # (width 프루닝 전용) activation | magnitude
+calibration:
+  datasets:
+    - MarkrAI/KoCommercial-Dataset
+    - beomi/KoAlpaca-RealQA
+    - beomi/kowikitext-qa-ref-detail-preview
+  seq_len: 1024 # 자를 기준(중요도)를 얼마나 많은 토큰에서 측정하나
+  n_samples: 256
+  seed: 42
+output:
+  dir: artifacts/phi4-pruned

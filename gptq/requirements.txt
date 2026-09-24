@@ -1,0 +1,22 @@
+# torch는 CUDA 빌드로 별도 설치 (gptqmodel 7.x가 torch>=2.8 요구 → cu124 불가, cu126 사용):
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+# 주의: gptqmodel을 먼저/같이 깔면 PyPI의 torch CPU 빌드로 덮어쓰니, 위 명령으로 다시 깔 것.
+
+# --- 양자화 ---
+gptqmodel>=7.1.0          # mllama(Llama 3.2 Vision) 지원. 7.x는 transformers>=5.4, torch>=2.8 요구
+
+# --- 모델/전처리 ---
+transformers>=5.4.0       # gptqmodel 7.x 요구치. mllama + SmolVLM2 모두 지원
+accelerate>=0.34.0
+huggingface_hub>=0.25.0
+safetensors>=0.4.0
+sentencepiece>=0.2.0
+
+# --- 캘리브레이션 데이터 (이미지+텍스트) ---
+datasets>=3.0.0
+pillow>=10.0.0
+
+# --- 유틸 ---
+python-dotenv>=1.0.0
+pyyaml>=6.0
+tqdm>=4.66.0

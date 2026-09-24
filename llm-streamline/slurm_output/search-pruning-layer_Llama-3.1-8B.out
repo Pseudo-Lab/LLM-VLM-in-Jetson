@@ -1,0 +1,30 @@
+Calculating cosine similarity...
+The cosine similarity between hidden_states 0 and hidden_states 8 is 0.5541
+The cosine similarity between hidden_states 1 and hidden_states 9 is 0.6372
+The cosine similarity between hidden_states 2 and hidden_states 10 is 0.6560
+The cosine similarity between hidden_states 3 and hidden_states 11 is 0.6789
+The cosine similarity between hidden_states 4 and hidden_states 12 is 0.6887
+The cosine similarity between hidden_states 5 and hidden_states 13 is 0.7062
+The cosine similarity between hidden_states 6 and hidden_states 14 is 0.7204
+The cosine similarity between hidden_states 7 and hidden_states 15 is 0.7339
+The cosine similarity between hidden_states 8 and hidden_states 16 is 0.7395
+The cosine similarity between hidden_states 9 and hidden_states 17 is 0.7389
+The cosine similarity between hidden_states 10 and hidden_states 18 is 0.7375
+The cosine similarity between hidden_states 11 and hidden_states 19 is 0.7301
+The cosine similarity between hidden_states 12 and hidden_states 20 is 0.7248
+The cosine similarity between hidden_states 13 and hidden_states 21 is 0.7307
+The cosine similarity between hidden_states 14 and hidden_states 22 is 0.7426
+The cosine similarity between hidden_states 15 and hidden_states 23 is 0.7514
+The cosine similarity between hidden_states 16 and hidden_states 24 is 0.7678
+The cosine similarity between hidden_states 17 and hidden_states 25 is 0.7862
+The cosine similarity between hidden_states 18 and hidden_states 26 is 0.8082
+The cosine similarity between hidden_states 19 and hidden_states 27 is 0.8172
+The cosine similarity between hidden_states 20 and hidden_states 28 is 0.8261
+The cosine similarity between hidden_states 21 and hidden_states 29 is 0.8217
+The cosine similarity between hidden_states 22 and hidden_states 30 is 0.8275
+The cosine similarity between hidden_states 23 and hidden_states 31 is 0.7997
+The cosine similarity between hidden_states 24 and hidden_states 32 is 0.6477
+The highest cosine similarity comes from hidden_states 22 and hidden_states 30, with a value of 0.8275
+
+
+pruning_layer: [22, 29]

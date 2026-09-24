@@ -1,0 +1,23 @@
+[project]
+name = "phi4-compression"
+version = "0.1.0"
+description = "Phi-4 구조적 프루닝(ShortGPT depth) + distillation + 평가 (Jetson 타깃)"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.2",          # 코어
+    "transformers>=5.0",   # from_pretrained(dtype=...) 사용
+    "datasets>=2.19",      # 한국어 보정셋 로딩
+    "accelerate>=0.30",    # lm-eval batch_size=auto
+    "lm-eval>=0.4.3",      # KMMLU 평가
+    "pyyaml>=6.0",         # config
+    "pytest>=8.0",         # 단위 테스트
+    "peft>=0.11",          # LoRA distillation
+    "bitsandbytes>=0.43",  # paged_adamw_8bit full-FT 옵티마이저
+    "safetensors>=0.4",    # teacher top-k 사전계산 저장
+]
+
+[project.optional-dependencies]
+gguf = ["gguf>=0.10.0"]   # GGUF 양자화 모델 평가(benchmarks/) 시에만
+
+[tool.uv]
+package = false            # src/ 코드는 sys.path 로 import (pip 설치 패키지 아님) → 의존성만 관리

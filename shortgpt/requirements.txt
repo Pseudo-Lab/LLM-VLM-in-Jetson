@@ -1,0 +1,14 @@
+# 핵심 (프루닝 + 평가)
+torch>=2.2
+transformers>=5.0          # from_pretrained(dtype=...) 사용 — 4.x의 torch_dtype= 아님
+datasets>=2.19             # 한국어 보정셋 로딩
+accelerate>=0.30           # lm-eval batch_size=auto
+lm-eval>=0.4.3             # KMMLU 평가
+pyyaml>=6.0                # config
+pytest>=8.0                # 단위 테스트
+peft>=0.11                 # LoRA distillation
+bitsandbytes>=0.43         # paged_adamw_8bit full-FT 옵티마이저
+safetensors>=0.4           # teacher top-k 사전계산 저장
+
+# 선택: GGUF 양자화 모델 평가(benchmarks/) 시에만 필요
+# gguf>=0.10.0

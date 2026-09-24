@@ -1,0 +1,68 @@
+# GPTQ 양자화 설정
+
+model:
+  # gated 모델 — HF 토큰 필요 (.env)
+  id: "meta-llama/Llama-3.2-11B-Vision-Instruct"
+  local_dir: "models/Llama-3.2-11B-Vision-Instruct"      # 다운로드 위치
+
+quantize:
+  bits: 4              # 4비트
+  group_size: 128      # 정확도/크기 균형. -1 이면 per-column
+  desc_act: false      # true면 정확도↑ 속도↓ (Jetson 추론 호환성 고려해 false 시작)
+  sym: true            # 대칭 양자화
+  # 한국어 혼합 캘리브 재양자화 산출물. 영어캘리브 기준선(...-gptq-4bit)은 보존.
+  output_dir: "models/Llama-3.2-11B-Vision-Instruct-gptq-4bit-kocalib"
+
+calibration:
+  # GPTQModel의 mllama 지원은 "텍스트 레이어 한정"이라 텍스트 캘리브로 충분.
+  #   text       : list[str] 캘리브 (공식 예제 방식, 안정적) ← 기본
+  #   multimodal : 이미지+텍스트 processor 입력 (버전 의존적, 실험적)
+  mode: "text"
+  dataset: "lmms-lab/flickr30k"   # sources 미존재 시 폴백용 (단일 dataset)
+  num_samples: 256                # 총 캘리브 샘플 수 (128~512 권장)
+  min_length: 16                  # 너무 짧은 캘리브 문장 제외
+  pack_chars: 2000                # 샘플당 목표 길이(문자) — 짧은 캡션을 이어붙여
+                                  # GPTQ 권장(평균 256토큰+)을 충족. 0 이면 패킹 안 함
+  max_tokens: 1024
+  seed: 42
+
+  # 가중 멀티소스 캘리브. 한국어 손상(Δ+19.6%)을 줄이기 위해 한국어 위주(70:30).
+  # 한국어: Wikipedia-KO (parquet 포맷 → streaming 정상 동작, PPL 평가셋과 동일 분포)
+  # 영어: Flickr30k (6/10 원래 양자화에서 검증된 데이터셋, 오류 없음)
+  # PPL 평가셋(wikitext-en / wikipedia-ko)·VLM 평가셋(textvqa)과 무중복 → 오염 없음.
+  sources:
+    - dataset: "wikimedia/wikipedia"
+      config: "20231101.ko"
+      split: "train"
+      field: "text"       # 한국어 Wikipedia 본문
+      weight: 0.7
+    - dataset: "lmms-lab/flickr30k"
+      split: "test"
+      field: null         # auto-detect: caption
+      weight: 0.3
+
+runtime:
+  # 12GB VRAM 대응: 레이어 단위 양자화 + CPU 오프로드
+  device_map: "auto"
+  batch_size: 1
+
+evaluate:
+  # 이미지+질문(+정답) 데이터셋. 정답 필드가 없으면 정확도는 미산출(속도/VRAM만).
+  dataset: "lmms-lab/textvqa"
+  split: "validation"
+  num_samples: 100
+  max_new_tokens: 64
+
+  # 비교 대상. kind: mllama_fp16 | gptq | smolvlm
+  #   1) 순수 양자화 검증: fp16 vs 4bit (같은 11B)
+  #   2) 엣지 참고선: SmolVLM2 (무양자화) — 양자화 기준 아님, 참고용
+  models:
+    - name: "11B fp16 (기준)"
+      kind: "mllama_fp16"
+      path: "models/Llama-3.2-11B-Vision-Instruct"
+    - name: "11B GPTQ-4bit"
+      kind: "gptq"
+      path: "models/Llama-3.2-11B-Vision-Instruct-gptq-4bit"
+    - name: "SmolVLM2-2.2B (엣지참고)"
+      kind: "smolvlm"
+      path: "HuggingFaceTB/SmolVLM2-2.2B-Instruct"

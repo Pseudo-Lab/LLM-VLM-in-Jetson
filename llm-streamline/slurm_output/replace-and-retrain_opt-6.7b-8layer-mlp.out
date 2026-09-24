@@ -1,0 +1,329 @@
+modeling_opt_mlp.py imported for opt + mlp replacement layer.
+Loading pretrained weights from facebook/opt-6.7b ...
+Initialising replace_layer from pretrained layer 2 ...
+Trainable params: 134,238,208 / 2,362,355,712
+Downloading SlimPajama-6B ...
+Step 500 — eval MSE loss: 31.970427
+[2026-07-17 19:13:27,627] [INFO] [real_accelerator.py:203:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[93m [WARNING] [0m Please specify the CUTLASS repo directory as environment variable $CUTLASS_PATH
+[93m [WARNING] [0m sparse_attn requires a torch version >= 1.5 and < 2.0 but detected 2.2
+[93m [WARNING] [0m using untested triton version (2.2.0), only 1.0.0 is known to be compatible
+New best (eval MSE 31.970427) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 1000 — eval MSE loss: 12.843388
+New best (eval MSE 12.843388) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 1500 — eval MSE loss: 3.371396
+New best (eval MSE 3.371396) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 2000 — eval MSE loss: 1.045532
+New best (eval MSE 1.045532) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 2500 — eval MSE loss: 0.541206
+New best (eval MSE 0.541206) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 3000 — eval MSE loss: 0.236769
+New best (eval MSE 0.236769) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 3500 — eval MSE loss: 0.115237
+New best (eval MSE 0.115237) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 4000 — eval MSE loss: 0.091583
+New best (eval MSE 0.091583) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 4500 — eval MSE loss: 0.077759
+New best (eval MSE 0.077759) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 5000 — eval MSE loss: 0.069369
+New best (eval MSE 0.069369) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 5500 — eval MSE loss: 0.064657
+New best (eval MSE 0.064657) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 6000 — eval MSE loss: 0.059060
+New best (eval MSE 0.059060) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 6500 — eval MSE loss: 0.053491
+New best (eval MSE 0.053491) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 7000 — eval MSE loss: 0.048818
+New best (eval MSE 0.048818) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 7500 — eval MSE loss: 0.044867
+New best (eval MSE 0.044867) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 8000 — eval MSE loss: 0.041645
+New best (eval MSE 0.041645) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 8500 — eval MSE loss: 0.039275
+New best (eval MSE 0.039275) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 9000 — eval MSE loss: 0.037394
+New best (eval MSE 0.037394) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 9500 — eval MSE loss: 0.035997
+New best (eval MSE 0.035997) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 10000 — eval MSE loss: 0.034626
+New best (eval MSE 0.034626) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 10500 — eval MSE loss: 0.033674
+New best (eval MSE 0.033674) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 11000 — eval MSE loss: 0.032908
+New best (eval MSE 0.032908) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 11500 — eval MSE loss: 0.032144
+New best (eval MSE 0.032144) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 12000 — eval MSE loss: 0.031429
+New best (eval MSE 0.031429) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 12500 — eval MSE loss: 0.030973
+New best (eval MSE 0.030973) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 13000 — eval MSE loss: 0.030389
+New best (eval MSE 0.030389) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 13500 — eval MSE loss: 0.030099
+New best (eval MSE 0.030099) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 14000 — eval MSE loss: 0.029687
+New best (eval MSE 0.029687) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 14500 — eval MSE loss: 0.029354
+New best (eval MSE 0.029354) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 15000 — eval MSE loss: 0.028979
+New best (eval MSE 0.028979) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 15500 — eval MSE loss: 0.028764
+New best (eval MSE 0.028764) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 16000 — eval MSE loss: 0.028455
+New best (eval MSE 0.028455) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 16500 — eval MSE loss: 0.028197
+New best (eval MSE 0.028197) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 17000 — eval MSE loss: 0.027934
+New best (eval MSE 0.027934) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 17500 — eval MSE loss: 0.027792
+New best (eval MSE 0.027792) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 18000 — eval MSE loss: 0.027688
+New best (eval MSE 0.027688) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 18500 — eval MSE loss: 0.027373
+New best (eval MSE 0.027373) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 19000 — eval MSE loss: 0.027244
+New best (eval MSE 0.027244) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 19500 — eval MSE loss: 0.027101
+New best (eval MSE 0.027101) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 20000 — eval MSE loss: 0.026982
+New best (eval MSE 0.026982) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 20500 — eval MSE loss: 0.026735
+New best (eval MSE 0.026735) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 21000 — eval MSE loss: 0.026753
+Step 21500 — eval MSE loss: 0.026637
+New best (eval MSE 0.026637) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 22000 — eval MSE loss: 0.026326
+New best (eval MSE 0.026326) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 22500 — eval MSE loss: 0.026282
+New best (eval MSE 0.026282) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 23000 — eval MSE loss: 0.026197
+New best (eval MSE 0.026197) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 23500 — eval MSE loss: 0.025971
+New best (eval MSE 0.025971) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 24000 — eval MSE loss: 0.025866
+New best (eval MSE 0.025866) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 24500 — eval MSE loss: 0.025771
+New best (eval MSE 0.025771) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 25000 — eval MSE loss: 0.025712
+New best (eval MSE 0.025712) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 25500 — eval MSE loss: 0.025592
+New best (eval MSE 0.025592) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 26000 — eval MSE loss: 0.025480
+New best (eval MSE 0.025480) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 26500 — eval MSE loss: 0.025403
+New best (eval MSE 0.025403) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 27000 — eval MSE loss: 0.025368
+New best (eval MSE 0.025368) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 27500 — eval MSE loss: 0.025356
+New best (eval MSE 0.025356) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 28000 — eval MSE loss: 0.025226
+New best (eval MSE 0.025226) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 28500 — eval MSE loss: 0.025134
+New best (eval MSE 0.025134) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 29000 — eval MSE loss: 0.025211
+Step 29500 — eval MSE loss: 0.024980
+New best (eval MSE 0.024980) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 30000 — eval MSE loss: 0.024952
+New best (eval MSE 0.024952) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 30500 — eval MSE loss: 0.024846
+New best (eval MSE 0.024846) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 31000 — eval MSE loss: 0.024825
+New best (eval MSE 0.024825) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 31500 — eval MSE loss: 0.024724
+New best (eval MSE 0.024724) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 32000 — eval MSE loss: 0.024716
+New best (eval MSE 0.024716) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 32500 — eval MSE loss: 0.024561
+New best (eval MSE 0.024561) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 33000 — eval MSE loss: 0.024492
+New best (eval MSE 0.024492) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 33500 — eval MSE loss: 0.024459
+New best (eval MSE 0.024459) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 34000 — eval MSE loss: 0.024443
+New best (eval MSE 0.024443) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 34500 — eval MSE loss: 0.024348
+New best (eval MSE 0.024348) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 35000 — eval MSE loss: 0.024300
+New best (eval MSE 0.024300) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 35500 — eval MSE loss: 0.024337
+Step 36000 — eval MSE loss: 0.024211
+New best (eval MSE 0.024211) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 36500 — eval MSE loss: 0.024145
+New best (eval MSE 0.024145) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 37000 — eval MSE loss: 0.024152
+Step 37500 — eval MSE loss: 0.024125
+New best (eval MSE 0.024125) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 38000 — eval MSE loss: 0.024053
+New best (eval MSE 0.024053) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 38500 — eval MSE loss: 0.024006
+New best (eval MSE 0.024006) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 39000 — eval MSE loss: 0.024017
+Step 39500 — eval MSE loss: 0.024010
+Step 40000 — eval MSE loss: 0.023930
+New best (eval MSE 0.023930) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 40500 — eval MSE loss: 0.023858
+New best (eval MSE 0.023858) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 41000 — eval MSE loss: 0.023861
+Step 41500 — eval MSE loss: 0.023833
+New best (eval MSE 0.023833) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 42000 — eval MSE loss: 0.023688
+New best (eval MSE 0.023688) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 42500 — eval MSE loss: 0.023687
+New best (eval MSE 0.023687) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 43000 — eval MSE loss: 0.023661
+New best (eval MSE 0.023661) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 43500 — eval MSE loss: 0.023629
+New best (eval MSE 0.023629) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 44000 — eval MSE loss: 0.023604
+New best (eval MSE 0.023604) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 44500 — eval MSE loss: 0.023602
+New best (eval MSE 0.023602) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 45000 — eval MSE loss: 0.023488
+New best (eval MSE 0.023488) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 45500 — eval MSE loss: 0.023553
+Step 46000 — eval MSE loss: 0.023436
+New best (eval MSE 0.023436) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 46500 — eval MSE loss: 0.023415
+New best (eval MSE 0.023415) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 47000 — eval MSE loss: 0.023505
+Step 47500 — eval MSE loss: 0.023379
+New best (eval MSE 0.023379) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 48000 — eval MSE loss: 0.023331
+New best (eval MSE 0.023331) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 48500 — eval MSE loss: 0.023331
+New best (eval MSE 0.023331) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 49000 — eval MSE loss: 0.023261
+New best (eval MSE 0.023261) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 49500 — eval MSE loss: 0.023395
+Step 50000 — eval MSE loss: 0.023274
+Step 50500 — eval MSE loss: 0.023220
+New best (eval MSE 0.023220) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 51000 — eval MSE loss: 0.023210
+New best (eval MSE 0.023210) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 51500 — eval MSE loss: 0.023283
+Step 52000 — eval MSE loss: 0.023198
+New best (eval MSE 0.023198) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 52500 — eval MSE loss: 0.023123
+New best (eval MSE 0.023123) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 53000 — eval MSE loss: 0.023141
+Step 53500 — eval MSE loss: 0.023050
+New best (eval MSE 0.023050) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 54000 — eval MSE loss: 0.023118
+Step 54500 — eval MSE loss: 0.023063
+Step 55000 — eval MSE loss: 0.023032
+New best (eval MSE 0.023032) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 55500 — eval MSE loss: 0.023003
+New best (eval MSE 0.023003) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 56000 — eval MSE loss: 0.022985
+New best (eval MSE 0.022985) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 56500 — eval MSE loss: 0.022929
+New best (eval MSE 0.022929) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 57000 — eval MSE loss: 0.022974
+Step 57500 — eval MSE loss: 0.022987
+Step 58000 — eval MSE loss: 0.022908
+New best (eval MSE 0.022908) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 58500 — eval MSE loss: 0.022975
+Step 59000 — eval MSE loss: 0.022811
+New best (eval MSE 0.022811) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 59500 — eval MSE loss: 0.022842
+Step 60000 — eval MSE loss: 0.022847
+Step 60500 — eval MSE loss: 0.022909
+Step 61000 — eval MSE loss: 0.022791
+New best (eval MSE 0.022791) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 61500 — eval MSE loss: 0.022737
+New best (eval MSE 0.022737) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 62000 — eval MSE loss: 0.022799
+Step 62500 — eval MSE loss: 0.022743
+Step 63000 — eval MSE loss: 0.022715
+New best (eval MSE 0.022715) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 63500 — eval MSE loss: 0.022651
+New best (eval MSE 0.022651) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 64000 — eval MSE loss: 0.022749
+Step 64500 — eval MSE loss: 0.022638
+New best (eval MSE 0.022638) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 65000 — eval MSE loss: 0.022616
+New best (eval MSE 0.022616) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 65500 — eval MSE loss: 0.022578
+New best (eval MSE 0.022578) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 66000 — eval MSE loss: 0.022545
+New best (eval MSE 0.022545) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 66500 — eval MSE loss: 0.022546
+Step 67000 — eval MSE loss: 0.022532
+New best (eval MSE 0.022532) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 67500 — eval MSE loss: 0.022596
+Step 68000 — eval MSE loss: 0.022509
+New best (eval MSE 0.022509) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 68500 — eval MSE loss: 0.022548
+Step 69000 — eval MSE loss: 0.022465
+New best (eval MSE 0.022465) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 69500 — eval MSE loss: 0.022482
+Step 70000 — eval MSE loss: 0.022463
+New best (eval MSE 0.022463) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 70500 — eval MSE loss: 0.022576
+Step 71000 — eval MSE loss: 0.022427
+New best (eval MSE 0.022427) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 71500 — eval MSE loss: 0.022382
+New best (eval MSE 0.022382) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 72000 — eval MSE loss: 0.022368
+New best (eval MSE 0.022368) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 72500 — eval MSE loss: 0.022353
+New best (eval MSE 0.022353) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 73000 — eval MSE loss: 0.022428
+Step 73500 — eval MSE loss: 0.022401
+Step 74000 — eval MSE loss: 0.022316
+New best (eval MSE 0.022316) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 74500 — eval MSE loss: 0.022473
+Step 75000 — eval MSE loss: 0.022308
+New best (eval MSE 0.022308) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 75500 — eval MSE loss: 0.022305
+New best (eval MSE 0.022305) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 76000 — eval MSE loss: 0.022375
+Step 76500 — eval MSE loss: 0.022435
+Step 77000 — eval MSE loss: 0.022366
+Step 77500 — eval MSE loss: 0.022233
+New best (eval MSE 0.022233) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 78000 — eval MSE loss: 0.022302
+Step 78500 — eval MSE loss: 0.022228
+New best (eval MSE 0.022228) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 79000 — eval MSE loss: 0.022180
+New best (eval MSE 0.022180) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 79500 — eval MSE loss: 0.022266
+Step 80000 — eval MSE loss: 0.022324
+Step 80500 — eval MSE loss: 0.022227
+Step 81000 — eval MSE loss: 0.022261
+Step 81500 — eval MSE loss: 0.022125
+New best (eval MSE 0.022125) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 82000 — eval MSE loss: 0.022187
+Step 82500 — eval MSE loss: 0.022200
+Step 83000 — eval MSE loss: 0.022123
+New best (eval MSE 0.022123) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 83500 — eval MSE loss: 0.022092
+New best (eval MSE 0.022092) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 84000 — eval MSE loss: 0.022123
+Step 84500 — eval MSE loss: 0.022065
+New best (eval MSE 0.022065) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 85000 — eval MSE loss: 0.022139
+Step 85500 — eval MSE loss: 0.022083
+Step 86000 — eval MSE loss: 0.022064
+New best (eval MSE 0.022064) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 86500 — eval MSE loss: 0.022055
+New best (eval MSE 0.022055) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 87000 — eval MSE loss: 0.022029
+New best (eval MSE 0.022029) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 87500 — eval MSE loss: 0.022073
+Step 88000 — eval MSE loss: 0.022016
+New best (eval MSE 0.022016) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 88500 — eval MSE loss: 0.022010
+New best (eval MSE 0.022010) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 89000 — eval MSE loss: 0.022121
+Step 89500 — eval MSE loss: 0.021963
+New best (eval MSE 0.021963) saved to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp
+Step 90000 — eval MSE loss: 0.021969
+Step 90500 — eval MSE loss: 0.022023
+Step 91000 — eval MSE loss: 0.021992
+Step 91500 — eval MSE loss: 0.022052
+Step 92000 — eval MSE loss: 0.022063
+No new best eval loss for 5 consecutive evals — stopping early at step 92000.

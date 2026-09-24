@@ -1,0 +1,21 @@
+# AWQ 양자화 모듈 필수 의존성
+torch>=2.1.0
+transformers>=4.43.0
+datasets>=2.18.0
+accelerate>=0.27.0
+safetensors
+sentencepiece
+protobuf
+numpy
+tqdm
+pyyaml
+
+# --- 선택 설치 ---
+# INT4 모델 로딩/추론 검증 (GPU 필요):
+#   pip install gptqmodel
+# 벤치마크 (KMMLU 등):
+#   pip install lm-eval>=0.4.0
+# vLLM 배포:
+#   pip install vllm>=0.4.0
+# 공식 AutoAWQ 베이스라인 비교 (주의: 로컬 awq/ 폴더와 이름 충돌 → run_awq.py는 회피 처리됨):
+#   pip install autoawq>=0.2.0

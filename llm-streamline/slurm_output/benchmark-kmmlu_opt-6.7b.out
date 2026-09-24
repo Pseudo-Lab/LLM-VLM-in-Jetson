@@ -1,0 +1,208 @@
+=== Benchmarking  opt_6.7b ( baseline) : facebook/opt-6.7b ===
+Loading facebook/opt-6.7b ...
+Model parameters: 6,658,473,984 (6.66B)  ~12.40 GB in bf16
+[Accounting] accuracy: 0.2000 (20/100)
+[Agricultural-Sciences] accuracy: 0.2530 (253/1000)
+[Aviation-Engineering-and-Maintenance] accuracy: 0.3160 (316/1000)
+[Biology] accuracy: 0.2780 (278/1000)
+[Chemical-Engineering] accuracy: 0.2600 (260/1000)
+[Chemistry] accuracy: 0.2933 (176/600)
+[Civil-Engineering] accuracy: 0.3170 (317/1000)
+[Computer-Science] accuracy: 0.3310 (331/1000)
+[Construction] accuracy: 0.3420 (342/1000)
+[Criminal-Law] accuracy: 0.2400 (48/200)  [truncated context: 30/200]
+[Ecology] accuracy: 0.2960 (296/1000)
+[Economics] accuracy: 0.2462 (32/130)
+[Education] accuracy: 0.2200 (22/100)
+[Electrical-Engineering] accuracy: 0.3270 (327/1000)
+[Electronics-Engineering] accuracy: 0.3220 (322/1000)
+[Energy-Management] accuracy: 0.2760 (276/1000)
+[Environmental-Science] accuracy: 0.3060 (306/1000)
+[Fashion] accuracy: 0.2800 (280/1000)
+[Food-Processing] accuracy: 0.2760 (276/1000)
+[Gas-Technology-and-Engineering] accuracy: 0.3260 (326/1000)
+[Geomatics] accuracy: 0.3260 (326/1000)
+[Health] accuracy: 0.2000 (20/100)
+[Industrial-Engineer] accuracy: 0.3100 (310/1000)
+[Information-Technology] accuracy: 0.3150 (315/1000)
+[Interior-Architecture-and-Design] accuracy: 0.3060 (306/1000)
+[Korean-History] accuracy: 0.1700 (17/100)
+[Law] accuracy: 0.2470 (247/1000)  [truncated context: 3/1000]
+[Machine-Design-and-Manufacturing] accuracy: 0.2550 (255/1000)
+[Management] accuracy: 0.2520 (252/1000)
+[Maritime-Engineering] accuracy: 0.2750 (165/600)
+[Marketing] accuracy: 0.2430 (243/1000)
+[Materials-Engineering] accuracy: 0.3150 (315/1000)
+[Math] accuracy: 0.2633 (79/300)
+[Mechanical-Engineering] accuracy: 0.3160 (316/1000)
+[Nondestructive-Testing] accuracy: 0.2670 (267/1000)
+[Patent] accuracy: 0.2100 (21/100)  [truncated context: 29/100]
+[Political-Science-and-Sociology] accuracy: 0.2533 (76/300)
+[Psychology] accuracy: 0.2520 (252/1000)
+[Public-Safety] accuracy: 0.3180 (318/1000)
+[Railway-and-Automotive-Engineering] accuracy: 0.2960 (296/1000)
+[Real-Estate] accuracy: 0.2000 (40/200)
+[Refrigerating-Machinery] accuracy: 0.1980 (198/1000)
+[Social-Welfare] accuracy: 0.2720 (272/1000)
+[Taxation] accuracy: 0.3050 (61/200)
+[Telecommunications-and-Wireless-Technology] accuracy: 0.3410 (341/1000)
+
+Params: 6,658,473,984 (6.66B)  Size: 12.40 GB
+STEM: 0.3011  Applied Science: 0.3013  HUMSS: 0.2416  Other: 0.2569  Average: 0.2758
+Summary appended to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/benchmark_results/kmmlu_summary.csv
+=== Benchmarking  opt_prune_from2to9_none ( none) : /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_none ===
+Loading /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_none ...
+Model parameters: 5,047,435,264 (5.05B)  ~9.40 GB in bf16
+[Accounting] accuracy: 0.1800 (18/100)
+[Agricultural-Sciences] accuracy: 0.1010 (101/1000)
+[Aviation-Engineering-and-Maintenance] accuracy: 0.1090 (109/1000)
+[Biology] accuracy: 0.2700 (270/1000)
+[Chemical-Engineering] accuracy: 0.2070 (207/1000)
+[Chemistry] accuracy: 0.2600 (156/600)
+[Civil-Engineering] accuracy: 0.2830 (283/1000)
+[Computer-Science] accuracy: 0.2370 (237/1000)
+[Construction] accuracy: 0.0920 (92/1000)
+[Criminal-Law] accuracy: 0.2150 (43/200)  [truncated context: 30/200]
+[Ecology] accuracy: 0.0720 (72/1000)
+[Economics] accuracy: 0.3000 (39/130)
+[Education] accuracy: 0.2200 (22/100)
+[Electrical-Engineering] accuracy: 0.0610 (61/1000)
+[Electronics-Engineering] accuracy: 0.2450 (245/1000)
+[Energy-Management] accuracy: 0.2390 (239/1000)
+[Environmental-Science] accuracy: 0.1530 (153/1000)
+[Fashion] accuracy: 0.1380 (138/1000)
+[Food-Processing] accuracy: 0.1140 (114/1000)
+[Gas-Technology-and-Engineering] accuracy: 0.1460 (146/1000)
+[Geomatics] accuracy: 0.2990 (299/1000)
+[Health] accuracy: 0.2400 (24/100)
+[Industrial-Engineer] accuracy: 0.1600 (160/1000)
+[Information-Technology] accuracy: 0.2240 (224/1000)
+[Interior-Architecture-and-Design] accuracy: 0.0610 (61/1000)
+[Korean-History] accuracy: 0.2000 (20/100)
+[Law] accuracy: 0.2290 (229/1000)  [truncated context: 3/1000]
+[Machine-Design-and-Manufacturing] accuracy: 0.0830 (83/1000)
+[Management] accuracy: 0.2400 (240/1000)
+[Maritime-Engineering] accuracy: 0.1600 (96/600)
+[Marketing] accuracy: 0.1390 (139/1000)
+[Materials-Engineering] accuracy: 0.1850 (185/1000)
+[Math] accuracy: 0.2500 (75/300)
+[Mechanical-Engineering] accuracy: 0.2350 (235/1000)
+[Nondestructive-Testing] accuracy: 0.2430 (243/1000)
+[Patent] accuracy: 0.2800 (28/100)  [truncated context: 29/100]
+[Political-Science-and-Sociology] accuracy: 0.2233 (67/300)
+[Psychology] accuracy: 0.2640 (264/1000)
+[Public-Safety] accuracy: 0.0390 (39/1000)
+[Railway-and-Automotive-Engineering] accuracy: 0.1500 (150/1000)
+[Real-Estate] accuracy: 0.1800 (36/200)
+[Refrigerating-Machinery] accuracy: 0.1830 (183/1000)
+[Social-Welfare] accuracy: 0.2650 (265/1000)
+[Taxation] accuracy: 0.2150 (43/200)
+[Telecommunications-and-Wireless-Technology] accuracy: 0.2190 (219/1000)
+
+Params: 5,047,435,264 (5.05B)  Size: 9.40 GB
+STEM: 0.2076  Applied Science: 0.1838  HUMSS: 0.2319  Other: 0.1425  Average: 0.1913
+Summary appended to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/benchmark_results/kmmlu_summary.csv
+=== Benchmarking  opt_prune_from2to9_mlp ( mlp) : /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp ===
+Loading /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_mlp ...
+Model parameters: 5,181,673,472 (5.18B)  ~9.65 GB in bf16
+[Accounting] accuracy: 0.3000 (30/100)
+[Agricultural-Sciences] accuracy: 0.0880 (88/1000)
+[Aviation-Engineering-and-Maintenance] accuracy: 0.3160 (316/1000)
+[Biology] accuracy: 0.2870 (287/1000)
+[Chemical-Engineering] accuracy: 0.1950 (195/1000)
+[Chemistry] accuracy: 0.2933 (176/600)
+[Civil-Engineering] accuracy: 0.3240 (324/1000)
+[Computer-Science] accuracy: 0.3220 (322/1000)
+[Construction] accuracy: 0.3370 (337/1000)
+[Criminal-Law] accuracy: 0.2600 (52/200)  [truncated context: 30/200]
+[Ecology] accuracy: 0.1730 (173/1000)
+[Economics] accuracy: 0.2462 (32/130)
+[Education] accuracy: 0.2300 (23/100)
+[Electrical-Engineering] accuracy: 0.3280 (328/1000)
+[Electronics-Engineering] accuracy: 0.3170 (317/1000)
+[Energy-Management] accuracy: 0.2440 (244/1000)
+[Environmental-Science] accuracy: 0.0180 (18/1000)
+[Fashion] accuracy: 0.1350 (135/1000)
+[Food-Processing] accuracy: 0.2680 (268/1000)
+[Gas-Technology-and-Engineering] accuracy: 0.1950 (195/1000)
+[Geomatics] accuracy: 0.3020 (302/1000)
+[Health] accuracy: 0.2200 (22/100)
+[Industrial-Engineer] accuracy: 0.3300 (330/1000)
+[Information-Technology] accuracy: 0.3060 (306/1000)
+[Interior-Architecture-and-Design] accuracy: 0.2950 (295/1000)
+[Korean-History] accuracy: 0.2000 (20/100)
+[Law] accuracy: 0.2470 (247/1000)  [truncated context: 3/1000]
+[Machine-Design-and-Manufacturing] accuracy: 0.0700 (70/1000)
+[Management] accuracy: 0.2090 (209/1000)
+[Maritime-Engineering] accuracy: 0.1833 (110/600)
+[Marketing] accuracy: 0.2430 (243/1000)
+[Materials-Engineering] accuracy: 0.3010 (301/1000)
+[Math] accuracy: 0.2700 (81/300)
+[Mechanical-Engineering] accuracy: 0.3210 (321/1000)
+[Nondestructive-Testing] accuracy: 0.3450 (345/1000)
+[Patent] accuracy: 0.2400 (24/100)  [truncated context: 29/100]
+[Political-Science-and-Sociology] accuracy: 0.2733 (82/300)
+[Psychology] accuracy: 0.2590 (259/1000)
+[Public-Safety] accuracy: 0.3220 (322/1000)
+[Railway-and-Automotive-Engineering] accuracy: 0.2960 (296/1000)
+[Real-Estate] accuracy: 0.2550 (51/200)
+[Refrigerating-Machinery] accuracy: 0.2190 (219/1000)
+[Social-Welfare] accuracy: 0.2730 (273/1000)
+[Taxation] accuracy: 0.2900 (58/200)
+[Telecommunications-and-Wireless-Technology] accuracy: 0.3410 (341/1000)
+
+Params: 5,181,673,472 (5.18B)  Size: 9.65 GB
+STEM: 0.2837  Applied Science: 0.2464  HUMSS: 0.2534  Other: 0.2384  Average: 0.2553
+Summary appended to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/benchmark_results/kmmlu_summary.csv
+=== Benchmarking  opt_prune_from2to9_tf ( tf) : /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_tf ===
+Loading /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/opt_prune_from2to9_tf ...
+Model parameters: 5,248,815,104 (5.25B)  ~9.78 GB in bf16
+[Accounting] accuracy: 0.3000 (30/100)
+[Agricultural-Sciences] accuracy: 0.0880 (88/1000)
+[Aviation-Engineering-and-Maintenance] accuracy: 0.3110 (311/1000)
+[Biology] accuracy: 0.2870 (287/1000)
+[Chemical-Engineering] accuracy: 0.2300 (230/1000)
+[Chemistry] accuracy: 0.2933 (176/600)
+[Civil-Engineering] accuracy: 0.3240 (324/1000)
+[Computer-Science] accuracy: 0.3270 (327/1000)
+[Construction] accuracy: 0.3330 (333/1000)
+[Criminal-Law] accuracy: 0.2300 (46/200)  [truncated context: 30/200]
+[Ecology] accuracy: 0.2660 (266/1000)
+[Economics] accuracy: 0.2462 (32/130)
+[Education] accuracy: 0.2300 (23/100)
+[Electrical-Engineering] accuracy: 0.3260 (326/1000)
+[Electronics-Engineering] accuracy: 0.3160 (316/1000)
+[Energy-Management] accuracy: 0.2550 (255/1000)
+[Environmental-Science] accuracy: 0.1930 (193/1000)
+[Fashion] accuracy: 0.1350 (135/1000)
+[Food-Processing] accuracy: 0.2760 (276/1000)
+[Gas-Technology-and-Engineering] accuracy: 0.3160 (316/1000)
+[Geomatics] accuracy: 0.3020 (302/1000)
+[Health] accuracy: 0.2200 (22/100)
+[Industrial-Engineer] accuracy: 0.3280 (328/1000)
+[Information-Technology] accuracy: 0.3060 (306/1000)
+[Interior-Architecture-and-Design] accuracy: 0.2970 (297/1000)
+[Korean-History] accuracy: 0.2200 (22/100)
+[Law] accuracy: 0.2470 (247/1000)  [truncated context: 3/1000]
+[Machine-Design-and-Manufacturing] accuracy: 0.0710 (71/1000)
+[Management] accuracy: 0.2030 (203/1000)
+[Maritime-Engineering] accuracy: 0.2100 (126/600)
+[Marketing] accuracy: 0.2430 (243/1000)
+[Materials-Engineering] accuracy: 0.2910 (291/1000)
+[Math] accuracy: 0.2733 (82/300)
+[Mechanical-Engineering] accuracy: 0.3210 (321/1000)
+[Nondestructive-Testing] accuracy: 0.3450 (345/1000)
+[Patent] accuracy: 0.2200 (22/100)  [truncated context: 29/100]
+[Political-Science-and-Sociology] accuracy: 0.2733 (82/300)
+[Psychology] accuracy: 0.2370 (237/1000)
+[Public-Safety] accuracy: 0.3230 (323/1000)
+[Railway-and-Automotive-Engineering] accuracy: 0.2920 (292/1000)
+[Real-Estate] accuracy: 0.2200 (44/200)
+[Refrigerating-Machinery] accuracy: 0.2540 (254/1000)
+[Social-Welfare] accuracy: 0.2730 (273/1000)
+[Taxation] accuracy: 0.2900 (58/200)
+[Telecommunications-and-Wireless-Technology] accuracy: 0.3410 (341/1000)
+
+Params: 5,248,815,104 (5.25B)  Size: 9.78 GB
+STEM: 0.2950  Applied Science: 0.2733  HUMSS: 0.2500  Other: 0.2372  Average: 0.2641
+Summary appended to /dss/dsstbyfs02/scratch/07/di54rur/pseudolab/opt-6b-pruned/benchmark_results/kmmlu_summary.csv
